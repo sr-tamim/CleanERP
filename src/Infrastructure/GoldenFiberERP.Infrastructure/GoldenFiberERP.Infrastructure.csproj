@@ -14,10 +14,13 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
+    <PackageReference Include="Npgsql" Version="9.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\GoldenFiberERP.Application\GoldenFiberERP.Application.csproj" />
+    <ProjectReference Include="..\GoldenFiberERP.Persistence\GoldenFiberERP.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

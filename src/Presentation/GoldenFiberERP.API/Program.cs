@@ -1,7 +1,10 @@
 using GoldenFiberERP.Application;
 using GoldenFiberERP.Infrastructure;
 using GoldenFiberERP.Persistence;
+using GoldenFiberERP.Persistence.Contexts;
+using GoldenFiberERP.Persistence.Seeders;
 using GoldenFiberERP.API.Middleware;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +40,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Initialize database
+await InitializeDatabaseAsync(app);
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
@@ -56,3 +62,31 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+static async Task InitializeDatabaseAsync(WebApplication app)
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    
+    try
+    {
+        // Ensure database is created
+        await context.Database.EnsureCreatedAsync();
+        logger.LogInformation("Database connection established successfully");
+        
+        // Seed sample data if needed
+        await ApplicationDbContextSeed.SeedAsync(context);
+        
+        // Check final count
+        var productCount = await context.Products.CountAsync();
+        logger.LogInformation("Database contains {ProductCount} products", productCount);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while initializing the database");
+        
+        // Don't throw here to allow the app to start even if DB is not available
+        // The health check endpoints will show the actual status
+    }
+}

@@ -4,8 +4,12 @@ using GoldenFiberERP.Application.Features.Health.Queries;
 
 namespace GoldenFiberERP.API.Controllers;
 
+/// <summary>
+/// System health monitoring and diagnostic endpoints
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
+[Tags("System Health")]
 public class HealthController : ControllerBase
 {
     private readonly IMediator _mediator;

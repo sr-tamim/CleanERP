@@ -4,6 +4,7 @@ using GoldenFiberERP.Persistence;
 using GoldenFiberERP.Persistence.Contexts;
 using GoldenFiberERP.Persistence.Seeders;
 using GoldenFiberERP.API.Middleware;
+using GoldenFiberERP.API.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,10 +19,7 @@ builder.Services.AddPersistence(builder.Configuration);
 
 // Add API documentation
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "GoldenFiberERP API", Version = "v1" });
-});
+builder.Services.AddModularSwagger();
 
 // Add exception handling
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -46,9 +44,11 @@ await InitializeDatabaseAsync(app);
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoldenFiberERP API v1"));
+    app.UseModularSwaggerUI();
 }
+
+// Enable static files for custom CSS
+app.UseStaticFiles();
 
 app.UseExceptionHandler();
 

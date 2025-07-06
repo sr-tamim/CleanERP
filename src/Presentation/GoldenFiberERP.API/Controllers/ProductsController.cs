@@ -6,8 +6,12 @@ using GoldenFiberERP.Application.Features.Inventory.DTOs;
 
 namespace GoldenFiberERP.API.Controllers;
 
+/// <summary>
+/// Products management endpoints for inventory operations
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
+[Tags("Products")]
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;

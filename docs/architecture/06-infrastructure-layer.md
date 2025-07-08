@@ -25,36 +25,52 @@ The Infrastructure layer implements the interfaces defined in the Application an
 - Infrastructure-specific configurations
 - External service clients
 
-## Planned Project Structure
+## Current Implementation
 
+The Infrastructure layer is currently implemented and includes:
+
+**Projects**:
+- `GoldenFiberERP.Infrastructure` - External services and repository implementations
+- `GoldenFiberERP.Persistence` - Database-specific implementations
+
+### Current Project Structure
+
+#### GoldenFiberERP.Infrastructure
 **Location**: `src/Infrastructure/GoldenFiberERP.Infrastructure`
 
 ```
 GoldenFiberERP.Infrastructure/
-├── Data/                       # Database and data access
-│   ├── Contexts/               # DbContext implementations
-│   ├── Configurations/         # Entity configurations
-│   ├── Repositories/           # Repository implementations
-│   ├── Migrations/             # EF Core migrations
-│   └── Interceptors/           # EF Core interceptors
-├── Services/                   # External service implementations
-│   ├── Email/                  # Email service implementations
-│   ├── FileStorage/            # File storage implementations
-│   ├── Caching/                # Caching implementations
-│   ├── Logging/                # Logging implementations
-│   └── BackgroundServices/     # Background service implementations
-├── Identity/                   # Authentication and authorization
-│   ├── Services/               # Identity services
-│   ├── Models/                 # Identity models
-│   └── Configuration/          # Identity configuration
-├── External/                   # External API integrations
-│   ├── PaymentGateways/        # Payment processing
-│   ├── ShippingProviders/      # Shipping integrations
-│   └── TaxServices/            # Tax calculation services
-├── Configuration/              # Infrastructure configuration
-│   ├── DependencyInjection.cs # Service registration
-│   └── Settings/               # Configuration models
-└── Utilities/                  # Infrastructure utilities
+├── GoldenFiberERP.Infrastructure.csproj
+├── DependencyInjection.cs     # Service registration
+├── README.md                  # Infrastructure documentation
+├── Extensions/                # Extension methods and utilities
+├── Persistence/               # Repository implementations
+│   └── Repositories/          # Repository implementations
+│       ├── Common/            # Base repository patterns
+│       ├── Inventory/         # Inventory repositories
+│       └── Settings/          # Settings repositories
+│           └── CountryRepository.cs # Country repository implementation
+└── Services/                  # External service implementations
+    └── (planned implementations)
+```
+
+#### GoldenFiberERP.Persistence
+**Location**: `src/Infrastructure/GoldenFiberERP.Persistence`
+
+```
+GoldenFiberERP.Persistence/
+├── GoldenFiberERP.Persistence.csproj
+├── DependencyInjection.cs     # Persistence service registration
+├── README.md                  # Persistence layer documentation
+├── Configurations/            # Entity configurations for EF Core
+│   └── Settings/              # Settings entity configurations
+│       └── CountryConfiguration.cs # Country EF configuration
+├── Contexts/                  # Database contexts
+│   └── ApplicationDbContext.cs # Main EF DbContext
+├── Repositories/              # Additional repository implementations
+│   └── (if needed)
+└── Seeders/                   # Database seeders and initial data
+    └── (seeding implementations)
 ```
 
 ## Data Access Implementation
@@ -63,41 +79,121 @@ GoldenFiberERP.Infrastructure/
 
 #### ApplicationDbContext
 ```csharp
-// Data/Contexts/ApplicationDbContext.cs
-public class ApplicationDbContext : DbContext, IUnitOfWork
+// Contexts/ApplicationDbContext.cs
+public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWork
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime _dateTime;
-    private readonly IDomainEventService _domainEventService;
+    private readonly IDomainEventService? _domainEventService;
+    private IDbContextTransaction? _currentTransaction;
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
         ICurrentUserService currentUserService,
         IDateTime dateTime,
-        IDomainEventService domainEventService) : base(options)
+        IDomainEventService? domainEventService = null) : base(options)
     {
         _currentUserService = currentUserService;
         _dateTime = dateTime;
         _domainEventService = domainEventService;
     }
 
-    public DbSet<Product> Products { get; set; } = null!;
-    public DbSet<Customer> Customers { get; set; } = null!;
-    public DbSet<Order> Orders { get; set; } = null!;
-    public DbSet<OrderItem> OrderItems { get; set; } = null!;
-    public DbSet<Supplier> Suppliers { get; set; } = null!;
+    // Entity Sets
+    public DbSet<Product> Products => Set<Product>();
+    public DbSet<Country> Countries => Set<Country>();
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        // Automatic auditing for AuditableEntity
+        foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    if (int.TryParse(_currentUserService.UserId, out var createdByUserId))
+                        entry.Entity.CreatedBy = createdByUserId;
+                    entry.Entity.CreatedAt = _dateTime.Now;
+                    break;
+                    
+                case EntityState.Modified:
+                    if (int.TryParse(_currentUserService.UserId, out var modifiedByUserId))
+                        entry.Entity.UpdatedBy = modifiedByUserId;
+                    entry.Entity.UpdatedAt = _dateTime.Now;
+                    break;
+            }
+        }
+
+        // Process domain events if service is available
+        if (_domainEventService != null)
+            await _domainEventService.PublishEvents(this);
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Apply all entity configurations
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        // Apply all entity configurations from assembly
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         // Global query filters for soft delete
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(ISoftDeleteEntity).IsAssignableFrom(entityType.ClrType))
             {
-                var parameter = Expression.Parameter(entityType.ClrType, "e");
+                // Configure soft delete filter
+                var method = typeof(ApplicationDbContext)
+                    .GetMethod(nameof(GetSoftDeleteFilter), BindingFlags.NonPublic | BindingFlags.Static)?
+                    .MakeGenericMethod(entityType.ClrType);
+                
+                var filter = method?.Invoke(null, Array.Empty<object>());
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter((LambdaExpression)filter!);
+            }
+        }
+
+        base.OnModelCreating(modelBuilder);
+    }
+
+    // Unit of Work pattern implementation
+    public async Task<IDbContextTransaction> BeginTransactionAsync()
+    {
+        return _currentTransaction ??= await Database.BeginTransactionAsync();
+    }
+
+    public async Task CommitTransactionAsync()
+    {
+        try
+        {
+            await SaveChangesAsync();
+            if (_currentTransaction != null)
+                await _currentTransaction.CommitAsync();
+        }
+        catch
+        {
+            await RollbackTransactionAsync();
+            throw;
+        }
+        finally
+        {
+            _currentTransaction?.Dispose();
+            _currentTransaction = null;
+        }
+    }
+
+    public async Task RollbackTransactionAsync()
+    {
+        try
+        {
+            if (_currentTransaction != null)
+                await _currentTransaction.RollbackAsync();
+        }
+        finally
+        {
+            _currentTransaction?.Dispose();
+            _currentTransaction = null;
+        }
+    }
+}
+```
                 var property = Expression.Property(parameter, nameof(ISoftDeleteEntity.IsDeleted));
                 var condition = Expression.Equal(property, Expression.Constant(false));
                 var lambda = Expression.Lambda(condition, parameter);

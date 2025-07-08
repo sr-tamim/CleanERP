@@ -15,6 +15,10 @@ This folder contains comprehensive architecture documentation for the GoldenFibe
 - **[Technology Stack](./09-technology-stack.md)** - Technologies, frameworks, and tools used
 - **[Deployment Architecture](./10-deployment-architecture.md)** - Docker containerization and deployment strategy
 
+## Development Guidelines
+
+- **[Feature Implementation Guide](../development/feature-implementation-guide.md)** - Step-by-step guide for implementing new features/modules following Clean Architecture principles
+
 ## Architecture Principles
 
 The GoldenFiberERP system follows Clean Architecture principles with clear separation of concerns:

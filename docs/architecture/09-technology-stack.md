@@ -36,8 +36,9 @@ The GoldenFiberERP system is built using modern, enterprise-grade technologies t
 
 ## Data Access Layer
 
-### Entity Framework Core 8
+### Entity Framework Core 9
 **Purpose**: Object-Relational Mapping (ORM)
+**Version**: 9.0.6
 **Features**:
 - Code-first approach with migrations
 - LINQ query support
@@ -47,9 +48,9 @@ The GoldenFiberERP system is built using modern, enterprise-grade technologies t
 
 **Configuration Example**:
 ```xml
-<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
-<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6" />
+<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 ```
 
 ### PostgreSQL
@@ -73,7 +74,7 @@ The GoldenFiberERP system is built using modern, enterprise-grade technologies t
 
 ### MediatR
 **Purpose**: Mediator pattern implementation for CQRS
-**Version**: 12.1.1
+**Version**: 13.0.0
 **Benefits**:
 - Decoupled request/response handling
 - Pipeline behaviors for cross-cutting concerns
@@ -82,13 +83,12 @@ The GoldenFiberERP system is built using modern, enterprise-grade technologies t
 
 **Configuration**:
 ```xml
-<PackageReference Include="MediatR" Version="12.1.1" />
-<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+<PackageReference Include="MediatR" Version="13.0.0" />
 ```
 
 ### AutoMapper
 **Purpose**: Object-to-object mapping
-**Version**: 12.0.1
+**Version**: 15.0.0
 **Benefits**:
 - Automatic property mapping
 - Custom mapping configurations
@@ -97,39 +97,45 @@ The GoldenFiberERP system is built using modern, enterprise-grade technologies t
 
 **Configuration**:
 ```xml
-<PackageReference Include="AutoMapper" Version="12.0.1" />
+<PackageReference Include="AutoMapper" Version="15.0.0" />
 <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 ```
 
 ### FluentValidation
 **Purpose**: Input validation
-**Version**: 11.8.0
+**Version**: 12.0.0
 **Benefits**:
 - Fluent interface for validation rules
-- Composable validation logic
-- Localization support
-- Integration with ASP.NET Core
+- Separation of validation from business logic
+- Extensible validation framework
+- ASP.NET Core integration
 
 **Configuration**:
 ```xml
-<PackageReference Include="FluentValidation" Version="11.8.0" />
-<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.0" />
-<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+<PackageReference Include="FluentValidation" Version="12.0.0" />
+<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
+```
+
+### Swagger/OpenAPI
+**Purpose**: API documentation and testing
+**Version**: 9.0.1
+**Benefits**:
+- Automatic API documentation generation
+- Interactive API testing interface
+- OpenAPI specification compliance
+- Client SDK generation capabilities
+
+**Configuration**:
+```xml
+<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.1" />
 ```
 
 ## Authentication & Authorization
 
-### ASP.NET Core Identity
-**Purpose**: User management and authentication
-**Features**:
-- User registration and login
-- Role-based authorization
-- Password hashing and security
-- Two-factor authentication support
-- External login providers
-
 ### JWT (JSON Web Tokens)
 **Purpose**: Stateless authentication
+**Version**: 8.0.17
 **Benefits**:
 - Stateless authentication
 - Cross-platform compatibility
@@ -138,48 +144,25 @@ The GoldenFiberERP system is built using modern, enterprise-grade technologies t
 
 **Configuration**:
 ```xml
-<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.17" />
 ```
 
-## Caching
+## Database Connectivity
 
-### In-Memory Caching
-**Purpose**: Fast application-level caching
-**Implementation**: `Microsoft.Extensions.Caching.Memory`
-**Use Cases**:
-- Frequently accessed reference data
-- User session data
-- Temporary data storage
-
-### Distributed Caching
-**Purpose**: Scalable caching across multiple instances
-**Implementation**: Redis
+### Npgsql
+**Purpose**: PostgreSQL data provider for .NET
+**Version**: 9.0.3
 **Benefits**:
-- Shared cache across application instances
-- Persistent caching options
-- High-performance data access
-- Support for complex data structures
+- High-performance PostgreSQL connectivity
+- Full PostgreSQL feature support
+- Async/await support
+- Connection pooling
 
 **Configuration**:
 ```xml
-<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.0" />
+<PackageReference Include="Npgsql" Version="9.0.3" />
+<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 ```
-
-## Logging and Monitoring
-
-### Serilog
-**Purpose**: Structured logging
-**Version**: 8.0.0
-**Benefits**:
-- Structured logging with properties
-- Multiple output sinks (file, console, database)
-- Configurable log levels
-- Correlation ID support
-
-**Configuration**:
-```xml
-<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
 <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
 <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.6.0" />

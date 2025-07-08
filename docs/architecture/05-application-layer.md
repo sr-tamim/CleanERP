@@ -29,20 +29,61 @@ The Application layer orchestrates the domain objects to perform specific use ca
 ### Project Structure
 **Location**: `src/Core/GoldenFiberERP.Application`
 
-**Current Status**: Basic project setup with placeholder class
-**Planned Structure**:
+**Current Status**: Implemented with CQRS pattern and feature-based organization
+**Actual Structure**:
 ```
 GoldenFiberERP.Application/
-├── Common/                     # Common application concerns
-├── Features/                   # Feature-based organization
-├── Services/                   # Application services
-├── DTOs/                       # Data transfer objects
-├── Exceptions/                 # Application-specific exceptions
-├── Interfaces/                 # Application interfaces
-├── Validators/                 # Input validation
-├── Mappers/                    # Object mapping
-└── Behaviors/                  # Cross-cutting behaviors
+├── GoldenFiberERP.Application.csproj
+├── DependencyInjection.cs     # Service registration
+├── README.md                  # Application documentation
+├── Common/                    # Common application concerns
+│   ├── Interfaces/            # Application interfaces
+│   │   └── IApplicationDbContext.cs # Database context interface
+│   ├── Models/                # Common models and DTOs
+│   ├── Exceptions/            # Application-specific exceptions
+│   └── Behaviors/             # Cross-cutting behaviors
+├── Features/                  # Feature-based organization
+│   ├── Health/                # Health check features
+│   ├── Inventory/             # Inventory management features
+│   └── Settings/              # Settings management features
+│       ├── Commands/          # Command handlers (Create, Update, Delete)
+│       ├── Queries/           # Query handlers (Get, List, Search)
+│       ├── DTOs/              # Data transfer objects
+│       ├── Validators/        # FluentValidation validators
+│       └── Mappers/           # AutoMapper profiles
+└── Services/                  # Application services
 ```
+
+### Implemented Features
+
+#### Settings Module - Country Management
+The Country feature demonstrates the full CQRS implementation:
+
+**Commands**:
+- `CreateCountryCommand` - Creates a new country
+- `UpdateCountryCommand` - Updates existing country
+- `DeleteCountryCommand` - Soft deletes a country
+- `ActivateCountryCommand` - Activates a country
+- `DeactivateCountryCommand` - Deactivates a country
+
+**Queries**:
+- `GetCountriesQuery` - Gets paginated list of countries
+- `GetCountryByIdQuery` - Gets country by ID
+- `GetCountryByCodeQuery` - Gets country by code
+- `GetActiveCountriesQuery` - Gets active countries only
+
+**DTOs**:
+- `CountryDto` - Complete country information
+- `CountryLookupDto` - Minimal country information for dropdowns
+- `CreateCountryDto` - Country creation request
+- `UpdateCountryDto` - Country update request
+
+**Validators**:
+- `CreateCountryCommandValidator` - Validates country creation
+- `UpdateCountryCommandValidator` - Validates country updates
+
+**Mappers**:
+- `CountryMappingProfile` - AutoMapper configuration for country entities
 
 ## Planned Implementation
 

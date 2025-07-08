@@ -36,28 +36,49 @@ The Presentation layer is the outermost layer of the application that handles us
 GoldenFiberERP.API/
 ├── GoldenFiberERP.API.csproj      # Project configuration
 ├── Program.cs                      # Application entry point
-├── appsettings.json               # Configuration (gitignored)
+├── appsettings.json               # Production configuration
 ├── appsettings.Development.json   # Development configuration
 ├── Dockerfile                     # Container definition
-├── Controllers/
-│   └── WeatherForecastController.cs # Sample controller (to be removed)
-├── Properties/
-│   └── launchSettings.json        # Launch profiles
-└── WeatherForecast.cs             # Sample model (to be removed)
+├── GoldenFiberERP.API.http        # HTTP client test file
+├── WeatherForecast.cs             # Sample model (to be removed)
+├── Controllers/                   # API controllers
+│   ├── WeatherForecastController.cs # Sample controller (to be removed)
+│   └── Settings/                  # Settings module controllers
+│       └── CountriesController.cs # Country CRUD operations
+├── Extensions/                    # API extensions and configuration
+│   ├── SwaggerExtensions.cs       # Swagger configuration
+│   └── SwaggerOperationFilter.cs  # Swagger operation filters
+└── Properties/
+    └── launchSettings.json        # Launch profiles
 ```
 
 ### Current Configuration
 
 #### Program.cs
+The application entry point is configured with:
+
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Add application services
+builder.Services.AddApplication(); // From Application layer
+builder.Services.AddInfrastructure(builder.Configuration); // From Infrastructure layer
+builder.Services.AddPersistence(builder.Configuration); // From Persistence layer
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
@@ -65,7 +86,77 @@ app.MapControllers();
 app.Run();
 ```
 
-**Status**: Basic ASP.NET Core setup, needs enhancement for production use.
+**Status**: Production-ready configuration with proper dependency injection and Swagger documentation.
+
+### Implemented Controllers
+
+#### CountriesController
+**File**: `Controllers/Settings/CountriesController.cs`
+
+```csharp
+[ApiController]
+[Route("api/settings/[controller]")]
+[Tags("Settings - Countries")]
+public class CountriesController : ControllerBase
+{
+    private readonly IMediator _mediator;
+    private readonly ILogger<CountriesController> _logger;
+
+    // GET /api/settings/countries
+    [HttpGet]
+    public async Task<IActionResult> GetCountries([FromQuery] GetCountriesQuery query)
+
+    // GET /api/settings/countries/{id}
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCountry(int id)
+
+    // POST /api/settings/countries
+    [HttpPost]
+    public async Task<IActionResult> CreateCountry([FromBody] CreateCountryDto dto)
+
+    // PUT /api/settings/countries/{id}
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCountry(int id, [FromBody] UpdateCountryDto dto)
+
+    // DELETE /api/settings/countries/{id}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCountry(int id)
+
+    // PATCH /api/settings/countries/{id}/activate
+    [HttpPatch("{id}/activate")]
+    public async Task<IActionResult> ActivateCountry(int id)
+
+    // PATCH /api/settings/countries/{id}/deactivate
+    [HttpPatch("{id}/deactivate")]
+    public async Task<IActionResult> DeactivateCountry(int id)
+}
+```
+
+**Features**:
+- **Complete CRUD Operations**: Create, Read, Update, Delete
+- **RESTful Design**: Follows REST conventions
+- **Proper HTTP Status Codes**: 200, 201, 400, 404, 500
+- **Error Handling**: Comprehensive exception handling
+- **Logging**: Structured logging for operations
+- **Swagger Documentation**: Automatic API documentation
+- **Validation**: Input validation using FluentValidation
+- **CQRS Pattern**: Uses MediatR for command/query separation
+
+### Swagger Configuration
+
+#### SwaggerExtensions
+**File**: `Extensions/SwaggerExtensions.cs`
+
+Provides modular organization of API endpoints:
+- **Settings Module**: Countries and other settings
+- **Inventory Module**: Product management (planned)
+- **Manufacturing Module**: Production operations (planned)
+- **Sales Module**: Orders and customers (planned)
+
+#### SwaggerOperationFilter
+**File**: `Extensions/SwaggerOperationFilter.cs`
+
+Automatically categorizes controllers into logical modules for better API documentation organization.
 
 ## Planned Implementation
 

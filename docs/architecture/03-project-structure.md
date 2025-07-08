@@ -27,6 +27,18 @@ GoldenFiberERP.sln              # Visual Studio solution file
 
 ### Core Layer (`src/Core/`)
 
+#### Shared Project (`GoldenFiberERP.Shared`)
+Contains shared utilities and common functionality:
+
+```
+GoldenFiberERP.Shared/
+├── GoldenFiberERP.Shared.csproj
+├── Constants/                 # Application constants
+├── Extensions/                # Extension methods
+├── Helpers/                   # Utility helpers
+└── Common/                    # Common shared functionality
+```
+
 #### Domain Project (`GoldenFiberERP.Domain`)
 Contains the business entities, interfaces, and domain logic:
 
@@ -38,19 +50,28 @@ GoldenFiberERP.Domain/
 │   │   ├── BaseEntity.cs       # Base class for all entities
 │   │   ├── AuditableEntity.cs  # Auditable entity with tracking
 │   │   └── ISoftDeleteEntity.cs # Soft delete interface
-│   └── Inventory/              # Inventory domain entities
-│       └── Product.cs          # Product entity
+│   ├── Inventory/              # Inventory domain entities
+│   │   └── Product.cs          # Product entity
+│   └── Settings/               # Settings domain entities
+│       └── Country.cs          # Country entity
 ├── Enums/
 │   └── UserRole.cs            # User role enumeration
+├── Events/                     # Domain events
+│   └── Settings/               # Settings events
+│       └── CountryEvents.cs    # Country domain events
 ├── Exceptions/
 │   └── InsufficientStockException.cs # Domain exceptions
 ├── Interfaces/
 │   └── Repositories/           # Repository contracts
 │       ├── Common/
 │       │   └── IBaseRepository.cs     # Base repository interface
-│       └── Inventory/
-│           └── IProductRepository.cs  # Product-specific repository
-└── ValueObjects/              # Value objects (planned)
+│       ├── Inventory/
+│       │   └── IProductRepository.cs  # Product-specific repository
+│       └── Settings/
+│           └── ICountryRepository.cs  # Country repository interface
+├── Services/                   # Domain services
+├── Specifications/             # Domain specifications
+└── ValueObjects/              # Value objects
 ```
 
 #### Application Project (`GoldenFiberERP.Application`)
@@ -59,45 +80,68 @@ Contains use cases, application services, and DTOs:
 ```
 GoldenFiberERP.Application/
 ├── GoldenFiberERP.Application.csproj
-├── Class1.cs                  # Placeholder (to be replaced)
-├── Common/                    # Common application concerns (planned)
+├── DependencyInjection.cs     # Dependency injection configuration
+├── README.md                  # Application layer documentation
+├── Common/                    # Common application concerns
 │   ├── Interfaces/            # Application interfaces
+│   │   └── IApplicationDbContext.cs # Database context interface
 │   ├── Models/                # Common DTOs and models
 │   ├── Exceptions/            # Application exceptions
 │   └── Behaviors/             # Cross-cutting behaviors
-├── Features/                  # Feature-based organization (planned)
-│   ├── Inventory/
+├── Features/                  # Feature-based organization
+│   ├── Health/                # Health check features
+│   ├── Inventory/             # Inventory features
 │   │   ├── Commands/          # Command handlers
 │   │   ├── Queries/           # Query handlers
 │   │   └── DTOs/              # Data transfer objects
-│   ├── Manufacturing/         # Manufacturing features
-│   ├── Sales/                 # Sales features
-│   └── Financial/             # Financial features
-└── Services/                  # Application services (planned)
-    ├── IEmailService.cs
-    ├── IFileService.cs
-    └── INotificationService.cs
+│   └── Settings/              # Settings features
+│       ├── Commands/          # Country commands
+│       ├── Queries/           # Country queries
+│       ├── DTOs/              # Country DTOs
+│       ├── Validators/        # Input validators
+│       └── Mappers/           # AutoMapper profiles
+└── Services/                  # Application services
 ```
 
 ### Infrastructure Layer (`src/Infrastructure/`)
 
-**Status**: Planned for future implementation
+#### Infrastructure Project (`GoldenFiberERP.Infrastructure`)
+Contains external service implementations and infrastructure concerns:
 
 ```
-GoldenFiberERP.Infrastructure/ (planned)
+GoldenFiberERP.Infrastructure/
 ├── GoldenFiberERP.Infrastructure.csproj
-├── Data/                      # Data access implementations
-│   ├── Contexts/
-│   │   └── ApplicationDbContext.cs
-│   ├── Configurations/        # Entity configurations
-│   │   ├── ProductConfiguration.cs
-│   │   └── BaseEntityConfiguration.cs
-│   ├── Repositories/          # Repository implementations
-│   │   ├── BaseRepository.cs
-│   │   └── ProductRepository.cs
-│   └── Migrations/            # EF Core migrations
-├── Services/                  # External service implementations
-│   ├── EmailService.cs
+├── DependencyInjection.cs     # Service registration
+├── README.md                  # Infrastructure documentation
+├── Extensions/                # Extension methods
+├── Persistence/               # Data access implementations
+│   └── Repositories/          # Repository implementations
+│       ├── Common/            # Base repository implementations
+│       ├── Inventory/         # Inventory repositories
+│       └── Settings/          # Settings repositories
+│           └── CountryRepository.cs # Country repository
+└── Services/                  # External service implementations
+    ├── EmailService.cs        # Email service implementation
+    ├── FileService.cs         # File service implementation
+    └── NotificationService.cs # Notification service implementation
+```
+
+#### Persistence Project (`GoldenFiberERP.Persistence`)
+Contains database-specific implementations:
+
+```
+GoldenFiberERP.Persistence/
+├── GoldenFiberERP.Persistence.csproj
+├── DependencyInjection.cs     # Persistence service registration
+├── README.md                  # Persistence documentation
+├── Configurations/            # Entity configurations
+│   └── Settings/              # Settings entity configurations
+│       └── CountryConfiguration.cs # Country EF configuration
+├── Contexts/                  # Database contexts
+│   └── ApplicationDbContext.cs # Main database context
+├── Repositories/              # Additional repository implementations
+└── Seeders/                   # Database seeders
+```
 │   ├── FileService.cs
 │   └── NotificationService.cs
 ├── Identity/                  # Identity and authentication
@@ -122,15 +166,18 @@ Web API for external communication:
 GoldenFiberERP.API/
 ├── GoldenFiberERP.API.csproj
 ├── Program.cs                 # Application entry point
-├── appsettings.json          # Configuration (ignored by git)
+├── appsettings.json          # Production configuration
 ├── appsettings.Development.json # Development configuration
 ├── Dockerfile                # Container definition
-├── .dockerignore             # Docker ignore rules
+├── GoldenFiberERP.API.http   # HTTP client test file
+├── WeatherForecast.cs        # Sample model (to be removed)
 ├── Controllers/              # API controllers
-│   └── WeatherForecastController.cs # Sample controller
-├── Models/                   # API models (planned)
-│   ├── Requests/             # Request DTOs
-│   └── Responses/            # Response DTOs
+│   ├── WeatherForecastController.cs # Sample controller
+│   └── Settings/             # Settings controllers
+│       └── CountriesController.cs # Country CRUD controller
+├── Extensions/               # API extensions
+│   ├── SwaggerExtensions.cs  # Swagger configuration
+│   └── SwaggerOperationFilter.cs # Swagger operation filter
 ├── Middleware/               # Custom middleware (planned)
 │   ├── ErrorHandlingMiddleware.cs
 │   ├── AuthenticationMiddleware.cs
@@ -141,9 +188,8 @@ GoldenFiberERP.API/
 ├── Configuration/            # Startup configuration (planned)
 │   ├── ServicesConfiguration.cs
 │   └── MiddlewareConfiguration.cs
-├── Properties/
-│   └── launchSettings.json   # Launch profiles
-└── WeatherForecast.cs        # Sample model (to be removed)
+└── Properties/
+    └── launchSettings.json   # Launch profiles
 ```
 
 ## Project Dependencies
@@ -152,23 +198,41 @@ GoldenFiberERP.API/
 ```
 GoldenFiberERP.API
     ↓ (references)
+    ├── GoldenFiberERP.Application
+    ├── GoldenFiberERP.Shared
+    ├── GoldenFiberERP.Infrastructure
+    └── GoldenFiberERP.Persistence
+
 GoldenFiberERP.Application
     ↓ (references)
-GoldenFiberERP.Domain
+    └── GoldenFiberERP.Domain
 
 GoldenFiberERP.Infrastructure
     ↓ (references)
-GoldenFiberERP.Application
+    ├── GoldenFiberERP.Application
+    └── GoldenFiberERP.Domain
+
+GoldenFiberERP.Persistence
     ↓ (references)
+    ├── GoldenFiberERP.Application
+    └── GoldenFiberERP.Domain
+
+GoldenFiberERP.Shared
+    └── (standalone)
+
 GoldenFiberERP.Domain
+    └── (standalone)
 ```
 
 ### Current Project References
-Based on the solution file analysis:
+Based on the actual project file analysis:
 
-- **GoldenFiberERP.API**: Currently has no project references (needs to reference Application layer)
+- **GoldenFiberERP.API**: References Application, Shared, Infrastructure, and Persistence layers
+- **GoldenFiberERP.Application**: References Domain layer
+- **GoldenFiberERP.Infrastructure**: References Application and Domain layers
+- **GoldenFiberERP.Persistence**: References Application and Domain layers
+- **GoldenFiberERP.Shared**: Standalone project (no references)
 - **GoldenFiberERP.Domain**: Standalone project (correct)
-- **GoldenFiberERP.Application**: Currently has no references (should reference Domain)
 
 ## Configuration Files
 

@@ -126,6 +126,116 @@ public class Product : AuditableEntity
 }
 ```
 
+#### Country Entity
+**File**: `Entities/Settings/Country.cs`
+
+```csharp
+public class Country : AuditableEntity
+{
+    public string Name { get; private set; } = string.Empty;
+    public string Code { get; private set; } = string.Empty;
+    public string Code3 { get; private set; } = string.Empty;
+    public string NumericCode { get; private set; } = string.Empty;
+    public string PhoneCode { get; private set; } = string.Empty;
+    public string Capital { get; private set; } = string.Empty;
+    public string CurrencyCode { get; private set; } = string.Empty;
+    public string Region { get; private set; } = string.Empty;
+    public int DisplayOrder { get; private set; }
+    public bool IsActive { get; private set; } = true;
+
+    private Country() { } // EF Constructor
+
+    // Factory method for creating new countries
+    public static Country Create(
+        string name,
+        string code,
+        string code3,
+        string numericCode,
+        string phoneCode,
+        string capital,
+        string currencyCode,
+        string region,
+        int displayOrder,
+        int createdBy)
+    {
+        var country = new Country
+        {
+            Name = name,
+            Code = code,
+            Code3 = code3,
+            NumericCode = numericCode,
+            PhoneCode = phoneCode,
+            Capital = capital,
+            CurrencyCode = currencyCode,
+            Region = region,
+            DisplayOrder = displayOrder,
+            CreatedBy = createdBy,
+            CreatedAt = DateTime.UtcNow,
+            IsActive = true
+        };
+
+        // Add domain event
+        country.AddDomainEvent(new CountryCreatedEvent(country));
+        return country;
+    }
+
+    // Business logic methods
+    public void UpdateDetails(string name, string capital, string currencyCode, string region, int displayOrder)
+    {
+        Name = name;
+        Capital = capital;
+        CurrencyCode = currencyCode;
+        Region = region;
+        DisplayOrder = displayOrder;
+        AddDomainEvent(new CountryUpdatedEvent(this));
+    }
+
+    public void Activate()
+    {
+        IsActive = true;
+        AddDomainEvent(new CountryActivatedEvent(this));
+    }
+
+    public void Deactivate()
+    {
+        IsActive = false;
+        AddDomainEvent(new CountryDeactivatedEvent(this));
+    }
+}
+```
+
+**Current Status**: Fully implemented with domain events and business logic
+
+### Domain Events
+
+#### Country Events
+**File**: `Events/Settings/CountryEvents.cs`
+
+```csharp
+using GoldenFiberERP.Domain.Events.Common;
+using GoldenFiberERP.Domain.Entities.Settings;
+
+namespace GoldenFiberERP.Domain.Events.Settings;
+
+public record CountryCreatedEvent(Country Country) : IDomainEvent;
+public record CountryUpdatedEvent(Country Country) : IDomainEvent;
+public record CountryDeletedEvent(int CountryId) : IDomainEvent;
+public record CountryActivatedEvent(Country Country) : IDomainEvent;
+public record CountryDeactivatedEvent(Country Country) : IDomainEvent;
+```
+
+**Purpose**:
+- Notify other parts of the system when country-related changes occur
+- Enable loose coupling between domain operations
+- Support event-driven architecture patterns
+- Maintain audit trails and business process workflows
+
+**Key Features**:
+- **Record Types**: Immutable event definitions
+- **Strongly Typed**: Each event carries specific domain information
+- **Business Semantics**: Events represent meaningful business occurrences
+- **Decoupled Communication**: Enables reactive programming patterns
+
 ### Domain Enumerations
 
 #### UserRole Enum
@@ -176,6 +286,8 @@ public class InsufficientStockException(string message) : Exception(message)
 
 ### Repository Interfaces
 
+The Domain layer defines repository contracts that are implemented in the Infrastructure layer.
+
 #### IBaseRepository Interface
 **File**: `Interfaces/Repositories/Common/IBaseRepository.cs`
 
@@ -191,43 +303,37 @@ public interface IBaseRepository<T> where T : BaseEntity
 }
 ```
 
-**Purpose**:
-- Defines standard CRUD operations
-- Provides consistent data access interface
-- Supports async operations with cancellation
+#### ICountryRepository Interface
+**File**: `Interfaces/Repositories/Settings/ICountryRepository.cs`
+
+```csharp
+using GoldenFiberERP.Domain.Entities.Settings;
+
+namespace GoldenFiberERP.Domain.Interfaces.Repositories.Settings;
+
+public interface ICountryRepository
+{
+    Task<IEnumerable<Country>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<Country?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<Country?> GetByCodeAsync(string code, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Country>> GetActiveAsync(CancellationToken cancellationToken = default);
+    Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default);
+    Task<bool> ExistsByCodeAsync(string code, CancellationToken cancellationToken = default);
+    Task AddAsync(Country country, CancellationToken cancellationToken = default);
+    Task UpdateAsync(Country country, CancellationToken cancellationToken = default);
+    Task DeleteAsync(Country country, CancellationToken cancellationToken = default);
+    Task<(IEnumerable<Country> Items, int TotalCount)> GetPagedAsync(
+        int pageNumber, int pageSize, string? searchTerm, bool? isActive,
+        CancellationToken cancellationToken = default);
+}
+```
 
 **Key Features**:
-- **Generic Implementation**: Works with any BaseEntity
-- **Async/Await Pattern**: Non-blocking operations
-- **Cancellation Support**: Cooperative cancellation
-- **Null Safety**: Nullable return types where appropriate
-
-#### IProductRepository Interface
-**File**: `Interfaces/Repositories/Inventory/IProductRepository.cs`
-
-```csharp
-public interface IProductRepository : IBaseRepository<Product>
-{
-    Task<Product?> GetByCode(string productCode, CancellationToken cancellationToken = default);
-}
-```
-
-**Purpose**:
-- Extends base repository with product-specific operations
-- Business-specific query methods
-- Domain-driven data access contracts
-
-**Planned Methods**:
-```csharp
-public interface IProductRepository : IBaseRepository<Product>
-{
-    Task<Product?> GetByCode(string productCode, CancellationToken cancellationToken = default);
-    Task<IEnumerable<Product>> GetByCategory(string category, CancellationToken cancellationToken = default);
-    Task<IEnumerable<Product>> GetLowStockProducts(CancellationToken cancellationToken = default);
-    Task<IEnumerable<Product>> SearchByName(string searchTerm, CancellationToken cancellationToken = default);
-    Task<bool> IsCodeUnique(string code, int? excludeId = null, CancellationToken cancellationToken = default);
-}
-```
+- **Async Operations**: All methods return Tasks for non-blocking execution
+- **Cancellation Support**: CancellationToken support for operation cancellation
+- **Domain-Specific Methods**: Business-specific query methods (e.g., GetByCodeAsync)
+- **Pagination Support**: Built-in support for paged results
+- **Specification Pattern**: Flexible filtering and sorting capabilities
 
 ## Planned Domain Entities
 

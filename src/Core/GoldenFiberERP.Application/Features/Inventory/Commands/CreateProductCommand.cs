@@ -27,16 +27,23 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
     public async Task<Result<int>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = new Product
+        if (string.IsNullOrWhiteSpace(request.SKU))
         {
-            Name = request.Name,
-            Description = request.Description,
-            Price = request.Price,
-            StockQuantity = request.StockQuantity,
-            SKU = request.SKU,
-            CreatedAt = _dateTime.UtcNow,
-            UpdatedAt = _dateTime.UtcNow
-        };
+            return Result<int>.Failure(new[] { "SKU is required" });
+        }
+
+        var product = Product.Create(
+            name: request.Name,
+            description: request.Description ?? string.Empty,
+            sku: request.SKU,
+            category: "General", // Default category - could be added to command
+            price: request.Price,
+            cost: 0, // Default cost - could be added to command
+            initialStock: request.StockQuantity,
+            minimumStockLevel: 10, // Default minimum stock level
+            reorderLevel: 20, // Default reorder level
+            unit: "PCS", // Default unit
+            createdBy: 0); // Default user - should come from current user service
 
         _context.Products.Add(product);
         await _context.SaveChangesAsync(cancellationToken);

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using GoldenFiberERP.Domain.Events;
 
 namespace GoldenFiberERP.Domain.Entities.Common
 {
@@ -7,6 +9,8 @@ namespace GoldenFiberERP.Domain.Entities.Common
     /// </summary>
     public abstract class BaseEntity
     {
+        private readonly List<IDomainEvent> _domainEvents = new();
+
         /// <summary>
         /// Unique identifier for the entity
         /// </summary>
@@ -22,5 +26,37 @@ namespace GoldenFiberERP.Domain.Entities.Common
         /// Timestamp when the entity was last updated
         /// </summary>
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// Domain events raised by this entity
+        /// </summary>
+        [NotMapped]
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+        /// <summary>
+        /// Add a domain event to this entity
+        /// </summary>
+        /// <param name="domainEvent">The domain event to add</param>
+        protected void AddDomainEvent(IDomainEvent domainEvent)
+        {
+            _domainEvents.Add(domainEvent);
+        }
+
+        /// <summary>
+        /// Remove a domain event from this entity
+        /// </summary>
+        /// <param name="domainEvent">The domain event to remove</param>
+        public void RemoveDomainEvent(IDomainEvent domainEvent)
+        {
+            _domainEvents.Remove(domainEvent);
+        }
+
+        /// <summary>
+        /// Clear all domain events from this entity
+        /// </summary>
+        public void ClearDomainEvents()
+        {
+            _domainEvents.Clear();
+        }
     }
 }

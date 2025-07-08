@@ -11,8 +11,8 @@ public class SwaggerOperationFilter : IOperationFilter
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
         // Get controller name
-        var controllerName = context.ApiDescription.ActionDescriptor.RouteValues.TryGetValue("controller", out var controller) 
-            ? controller 
+        var controllerName = context.ApiDescription.ActionDescriptor.RouteValues.TryGetValue("controller", out var controller)
+            ? controller
             : "Unknown";
 
         // Add module information to operation description
@@ -27,14 +27,14 @@ public class SwaggerOperationFilter : IOperationFilter
 
             // Add module information to tags if not already present
             operation.Tags ??= new List<OpenApiTag>();
-            
+
             // Ensure the module tag is present
-            var moduleTag = new OpenApiTag 
-            { 
+            var moduleTag = new OpenApiTag
+            {
                 Name = $"{moduleInfo} Module"
             };
-            
-            if (!operation.Tags.Any(t => t.Name == moduleTag.Name))
+
+            if (operation.Tags.Count == 0 && !operation.Tags.Any(t => t.Name == moduleTag.Name))
             {
                 operation.Tags.Insert(0, moduleTag);
             }
@@ -55,6 +55,7 @@ public class SwaggerOperationFilter : IOperationFilter
             var name when IsSalesController(name) => "Sales",
             var name when IsManufacturingController(name) => "Manufacturing",
             var name when IsFinancialController(name) => "Financial",
+            var name when IsSettingsController(name) => "Settings",
             var name when IsSystemController(name) => "System",
             _ => string.Empty
         };
@@ -75,7 +76,7 @@ public class SwaggerOperationFilter : IOperationFilter
         }
 
         // Add 401 Unauthorized for non-public endpoints
-        if (!operation.Responses.ContainsKey("401") && 
+        if (!operation.Responses.ContainsKey("401") &&
             !operation.Tags?.Any(t => t.Name.Contains("Health", StringComparison.OrdinalIgnoreCase)) == true)
         {
             operation.Responses.Add("401", new OpenApiResponse
@@ -138,6 +139,15 @@ public class SwaggerOperationFilter : IOperationFilter
             "financial", "accounting", "payments", "paymentmethods", "transactions", "reports", "budgets", "costcenter", "generalledger"
         };
         return financialControllers.Contains(controllerName, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static bool IsSettingsController(string controllerName)
+    {
+        var settingsControllers = new[]
+        {
+            "settings", "countries", "currencies", "timezones", "regions", "configurations", "preferences", "localization"
+        };
+        return settingsControllers.Contains(controllerName, StringComparer.OrdinalIgnoreCase);
     }
 
     private static bool IsSystemController(string controllerName)

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using GoldenFiberERP.Application.Common.Interfaces;
 using GoldenFiberERP.Domain.Entities.Inventory;
+using GoldenFiberERP.Domain.Entities.Settings;
 using GoldenFiberERP.Domain.Entities.Common;
 using System.Reflection;
 
@@ -26,6 +27,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWor
     }
 
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<Country> Countries => Set<Country>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

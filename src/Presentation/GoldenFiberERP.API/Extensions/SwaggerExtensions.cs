@@ -52,6 +52,13 @@ public static class SwaggerExtensions
                 Description = "Accounting, billing, payments, and financial reporting APIs"
             });
 
+            options.SwaggerDoc("settings", new OpenApiInfo
+            {
+                Version = "v1",
+                Title = "Settings & Configuration",
+                Description = "System settings, countries, currencies, and configuration management APIs"
+            });
+
             options.SwaggerDoc("system", new OpenApiInfo
             {
                 Version = "v1",
@@ -78,6 +85,7 @@ public static class SwaggerExtensions
                     "sales" => IsSalesController(controllerName),
                     "manufacturing" => IsManufacturingController(controllerName),
                     "financial" => IsFinancialController(controllerName),
+                    "settings" => IsSettingsController(controllerName),
                     "system" => IsSystemController(controllerName),
                     _ => false
                 };
@@ -137,6 +145,7 @@ public static class SwaggerExtensions
             options.SwaggerEndpoint("/swagger/sales/swagger.json", "💰 Sales Management");
             options.SwaggerEndpoint("/swagger/manufacturing/swagger.json", "🏭 Manufacturing Operations");
             options.SwaggerEndpoint("/swagger/financial/swagger.json", "💳 Financial Management");
+            options.SwaggerEndpoint("/swagger/settings/swagger.json", "⚙️ Settings & Configuration");
 
             options.RoutePrefix = "swagger";
             options.DocumentTitle = "GoldenFiberERP API Documentation";
@@ -246,6 +255,25 @@ public static class SwaggerExtensions
         };
 
         return financialControllers.Contains(controllerName, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static bool IsSettingsController(string? controllerName)
+    {
+        if (string.IsNullOrEmpty(controllerName)) return false;
+        
+        var settingsControllers = new[]
+        {
+            "Settings",
+            "Countries",
+            "Currencies",
+            "TimeZones",
+            "Regions",
+            "Configurations",
+            "Preferences",
+            "Localization"
+        };
+
+        return settingsControllers.Contains(controllerName, StringComparer.OrdinalIgnoreCase);
     }
 
     private static bool IsSystemController(string? controllerName)

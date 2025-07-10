@@ -333,7 +333,61 @@ public interface ICountryRepository
 - **Cancellation Support**: CancellationToken support for operation cancellation
 - **Domain-Specific Methods**: Business-specific query methods (e.g., GetByCodeAsync)
 - **Pagination Support**: Built-in support for paged results
-- **Specification Pattern**: Flexible filtering and sorting capabilities
+- ### Domain Services
+
+Domain Services contain business logic that doesn't naturally fit within a single entity. They coordinate operations across multiple entities or handle complex business rules.
+
+**Current Implementation**:
+
+#### Stock Management Service
+**File**: `Services/Inventory/IStockManagementService.cs`
+
+```csharp
+namespace GoldenFiberERP.Domain.Services.Inventory;
+
+public interface IStockManagementService
+{
+    Task<bool> ReserveStockAsync(Product product, int quantity, string reason);
+    Task ReleaseStockAsync(Product product, int quantity, string reason);
+    Task AdjustStockAsync(Product product, int quantity, string reason);
+    bool HasSufficientStock(Product product, int requiredQuantity);
+    bool IsLowStock(Product product);
+    Task TransferStockAsync(Product fromProduct, Product toProduct, int quantity, string reason);
+}
+```
+
+**Purpose**:
+- Coordinates complex stock operations across multiple products
+- Implements business rules for stock reservations and transfers
+- Handles stock validation and low-stock detection logic
+- Ensures data consistency during stock movements
+
+#### Pricing Service
+**File**: `Services/Pricing/IPricingService.cs`
+
+```csharp
+namespace GoldenFiberERP.Domain.Services.Pricing;
+
+public interface IPricingService
+{
+    Money CalculatePrice(Money basePrice, int customerId, int quantity, string currency = "USD");
+    decimal CalculateDiscountPercentage(int customerId, int quantity);
+    Money ApplyDiscounts(Money originalPrice, List<DiscountRule> discounts);
+    bool ValidatePricingRules(Money price, Product product);
+}
+```
+
+**Purpose**:
+- Implements complex pricing calculations with customer-specific rules
+- Handles quantity-based discounts and promotional pricing
+- Validates pricing rules and business constraints
+- Coordinates between ValueObjects (Money) and business logic
+
+**Key Characteristics of Domain Services**:
+- **Stateless**: No internal state, pure business logic
+- **Domain-Focused**: Express business concepts and rules
+- **Coordinating**: Orchestrate operations across multiple entities
+- **Interface-Based**: Defined as interfaces in Domain, implemented in Infrastructure
 
 ## Planned Domain Entities
 

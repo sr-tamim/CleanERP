@@ -4,6 +4,7 @@ using GoldenFiberERP.Application.Common.Interfaces;
 using GoldenFiberERP.Domain.Entities.Inventory;
 using GoldenFiberERP.Domain.Entities.Settings;
 using GoldenFiberERP.Domain.Entities.Common;
+using GoldenFiberERP.Persistence.Extensions;
 using System.Reflection;
 
 namespace GoldenFiberERP.Persistence.Contexts;
@@ -151,7 +152,12 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWor
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        // Apply all entity configurations from assembly
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        
+        // Apply PostgreSQL-specific configurations (snake_case naming)
+        builder.ConfigurePostgreSqlSpecifics();
+        
         base.OnModelCreating(builder);
     }
 }

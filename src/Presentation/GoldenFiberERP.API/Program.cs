@@ -5,12 +5,17 @@ using GoldenFiberERP.Persistence.Contexts;
 using GoldenFiberERP.Persistence.Seeders;
 using GoldenFiberERP.API.Middleware;
 using GoldenFiberERP.API.Extensions;
+using GoldenFiberERP.API.Filters;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // Add the API logging filter globally
+    options.Filters.Add<ApiLoggingFilter>();
+});
 
 // Add layer dependencies
 builder.Services.AddApplication();

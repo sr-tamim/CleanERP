@@ -6,6 +6,8 @@ public class ApiResponse<T>
     public T? Data { get; set; }
     public string? Message { get; set; }
     public IEnumerable<string> Errors { get; set; } = Array.Empty<string>();
+    public string? RequestId { get; set; }
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
     public static ApiResponse<T> SuccessResult(T data, string? message = null)
     {
@@ -42,5 +44,20 @@ public class ApiResponse : ApiResponse<object>
             Success = true,
             Message = message
         };
+    }
+
+    public static new ApiResponse ErrorResult(IEnumerable<string> errors, string? message = null)
+    {
+        return new ApiResponse
+        {
+            Success = false,
+            Message = message,
+            Errors = errors
+        };
+    }
+
+    public static new ApiResponse ErrorResult(string error, string? message = null)
+    {
+        return ErrorResult(new[] { error }, message);
     }
 }

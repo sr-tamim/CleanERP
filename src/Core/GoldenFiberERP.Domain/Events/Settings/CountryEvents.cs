@@ -7,7 +7,7 @@ public sealed record CountryCreatedEvent(
     int CountryId,
     string CountryName,
     string CountryCode,
-    string Region,
+    string? Region,
     int CreatedBy
 ) : DomainEvent;
 

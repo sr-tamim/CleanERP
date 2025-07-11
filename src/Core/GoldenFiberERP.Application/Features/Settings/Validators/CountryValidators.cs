@@ -33,9 +33,9 @@ public class CreateCountryCommandValidator : AbstractValidator<CreateCountryComm
             .MustAsync(BeUniqueCode3).WithMessage("Country code3 already exists");
 
         RuleFor(x => x.NumericCode)
-            .NotEmpty().WithMessage("Numeric code is required")
-            .Length(3).WithMessage("Numeric code must be exactly 3 digits")
-            .Matches("^[0-9]{3}$").WithMessage("Numeric code must be 3 digits");
+            .MaximumLength(3).WithMessage("Numeric code must be at most 3 digits")
+            .Matches("^[0-9]{3}$").When(x => !string.IsNullOrEmpty(x.NumericCode))
+            .WithMessage("Numeric code must be exactly 3 digits when provided");
 
         RuleFor(x => x.PhoneCode)
             .MaximumLength(5).WithMessage("Phone code cannot exceed 5 characters");

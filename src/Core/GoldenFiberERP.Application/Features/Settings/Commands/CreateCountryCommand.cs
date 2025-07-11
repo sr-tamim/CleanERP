@@ -15,15 +15,15 @@ public record CreateCountryCommand : IRequest<Result<int>>
 {
     public string Name { get; init; } = string.Empty;
     public string Code { get; init; } = string.Empty;
-    public string Code3 { get; init; } = string.Empty;
-    public string NumericCode { get; init; } = string.Empty;
-    public string PhoneCode { get; init; } = string.Empty;
-    public string Capital { get; init; } = string.Empty;
-    public string CurrencyCode { get; init; } = string.Empty;
-    public string CurrencySymbol { get; init; } = string.Empty;
-    public string TimeZone { get; init; } = string.Empty;
-    public string Region { get; init; } = string.Empty;
-    public string SubRegion { get; init; } = string.Empty;
+    public string? Code3 { get; init; } = null;
+    public string? NumericCode { get; init; } = null;
+    public string? PhoneCode { get; init; } = null;
+    public string? Capital { get; init; } = null;
+    public string? CurrencyCode { get; init; } = null;
+    public string? CurrencySymbol { get; init; } = null;
+    public string? TimeZone { get; init; } = null;
+    public string? Region { get; init; } = null;
+    public string? SubRegion { get; init; } = null;
     public int DisplayOrder { get; init; } = 0;
 }
 

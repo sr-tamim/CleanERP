@@ -28,55 +28,55 @@ public class Country : AuditableEntity
     /// ISO 3166-1 alpha-3 code (e.g., "USA", "CAN")
     /// </summary>
     [StringLength(3)]
-    public string Code3 { get; private set; } = string.Empty;
+    public string? Code3 { get; private set; } = null;
 
     /// <summary>
     /// ISO 3166-1 numeric code (e.g., "840", "124")
     /// </summary>
     [StringLength(3)]
-    public string NumericCode { get; private set; } = string.Empty;
+    public string? NumericCode { get; private set; } = null;
 
     /// <summary>
     /// Phone country code (e.g., "+1", "+44")
     /// </summary>
     [StringLength(5)]
-    public string PhoneCode { get; private set; } = string.Empty;
+    public string? PhoneCode { get; private set; } = null;
 
     /// <summary>
     /// Capital city name
     /// </summary>
     [StringLength(100)]
-    public string Capital { get; private set; } = string.Empty;
+    public string? Capital { get; private set; } = null;
 
     /// <summary>
     /// Default currency code (ISO 4217)
     /// </summary>
     [StringLength(3)]
-    public string CurrencyCode { get; private set; } = string.Empty;
+    public string? CurrencyCode { get; private set; } = null;
 
     /// <summary>
     /// Default currency symbol
     /// </summary>
     [StringLength(5)]
-    public string CurrencySymbol { get; private set; } = string.Empty;
+    public string? CurrencySymbol { get; private set; } = null;
 
     /// <summary>
     /// Default timezone identifier
     /// </summary>
     [StringLength(50)]
-    public string TimeZone { get; private set; } = string.Empty;
+    public string? TimeZone { get; private set; } = null;
 
     /// <summary>
     /// Region/continent name
     /// </summary>
     [StringLength(50)]
-    public string Region { get; private set; } = string.Empty;
+    public string? Region { get; private set; } = null;
 
     /// <summary>
     /// Sub-region name
     /// </summary>
     [StringLength(50)]
-    public string SubRegion { get; private set; } = string.Empty;
+    public string? SubRegion { get; private set; } = null;
 
     /// <summary>
     /// Whether the country is currently active in the system
@@ -94,15 +94,15 @@ public class Country : AuditableEntity
     public static Country Create(
         string name,
         string code,
-        string code3,
-        string numericCode,
-        string phoneCode,
-        string capital,
-        string currencyCode,
-        string currencySymbol,
-        string timeZone,
-        string region,
-        string subRegion,
+        string? code3,
+        string? numericCode,
+        string? phoneCode,
+        string? capital,
+        string? currencyCode,
+        string? currencySymbol,
+        string? timeZone,
+        string? region,
+        string? subRegion,
         int displayOrder = 0,
         int createdBy = 0)
     {
@@ -112,15 +112,15 @@ public class Country : AuditableEntity
         {
             Name = name.Trim(),
             Code = code.Trim().ToUpperInvariant(),
-            Code3 = code3.Trim().ToUpperInvariant(),
-            NumericCode = numericCode.Trim(),
-            PhoneCode = phoneCode.Trim(),
-            Capital = capital.Trim(),
-            CurrencyCode = currencyCode.Trim().ToUpperInvariant(),
-            CurrencySymbol = currencySymbol.Trim(),
-            TimeZone = timeZone.Trim(),
-            Region = region.Trim(),
-            SubRegion = subRegion.Trim(),
+            Code3 = string.IsNullOrEmpty(code3) ? null : code3.Trim().ToUpperInvariant(),
+            NumericCode = string.IsNullOrEmpty(numericCode) ? null : numericCode.Trim(),
+            PhoneCode = string.IsNullOrEmpty(phoneCode) ? null : phoneCode.Trim(),
+            Capital = string.IsNullOrEmpty(capital) ? null : capital.Trim(),
+            CurrencyCode = string.IsNullOrEmpty(currencyCode) ? null : currencyCode.Trim().ToUpperInvariant(),
+            CurrencySymbol = string.IsNullOrEmpty(currencySymbol) ? null : currencySymbol.Trim(),
+            TimeZone = string.IsNullOrEmpty(timeZone) ? null : timeZone.Trim(),
+            Region = string.IsNullOrEmpty(region) ? null : region.Trim(),
+            SubRegion = string.IsNullOrEmpty(subRegion) ? null : subRegion.Trim(),
             DisplayOrder = displayOrder,
             IsActive = true
         };
@@ -141,12 +141,12 @@ public class Country : AuditableEntity
     /// </summary>
     public void Update(
         string name,
-        string capital,
-        string currencyCode,
-        string currencySymbol,
-        string timeZone,
-        string region,
-        string subRegion,
+        string? capital,
+        string? currencyCode,
+        string? currencySymbol,
+        string? timeZone,
+        string? region,
+        string? subRegion,
         int displayOrder,
         int updatedBy)
     {
@@ -154,14 +154,14 @@ public class Country : AuditableEntity
             throw new ArgumentException("Country name cannot be empty", nameof(name));
 
         var previousName = Name;
-        
+
         Name = name.Trim();
-        Capital = capital.Trim();
-        CurrencyCode = currencyCode.Trim().ToUpperInvariant();
-        CurrencySymbol = currencySymbol.Trim();
-        TimeZone = timeZone.Trim();
-        Region = region.Trim();
-        SubRegion = subRegion.Trim();
+        Capital = string.IsNullOrEmpty(capital) ? null : capital.Trim();
+        CurrencyCode = string.IsNullOrEmpty(currencyCode) ? null : currencyCode.Trim().ToUpperInvariant();
+        CurrencySymbol = string.IsNullOrEmpty(currencySymbol) ? null : currencySymbol.Trim();
+        TimeZone = string.IsNullOrEmpty(timeZone) ? null : timeZone.Trim();
+        Region = string.IsNullOrEmpty(region) ? null : region.Trim();
+        SubRegion = string.IsNullOrEmpty(subRegion) ? null : subRegion.Trim();
         DisplayOrder = displayOrder;
 
         // Raise domain event if name changed
@@ -200,7 +200,7 @@ public class Country : AuditableEntity
         }
     }
 
-    private static void ValidateRequiredFields(string name, string code, string code3, string numericCode)
+    private static void ValidateRequiredFields(string name, string code, string? code3, string? numericCode)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Country name cannot be empty", nameof(name));
@@ -208,13 +208,13 @@ public class Country : AuditableEntity
         if (string.IsNullOrWhiteSpace(code) || code.Length != 2)
             throw new ArgumentException("Country code must be exactly 2 characters", nameof(code));
 
-        if (string.IsNullOrWhiteSpace(code3) || code3.Length != 3)
+        if (!string.IsNullOrWhiteSpace(code3) && code3.Length != 3)
             throw new ArgumentException("Country code3 must be exactly 3 characters", nameof(code3));
 
-        if (string.IsNullOrWhiteSpace(numericCode) || numericCode.Length != 3)
+        if (!string.IsNullOrWhiteSpace(numericCode) && numericCode.Length != 3)
             throw new ArgumentException("Numeric code must be exactly 3 digits", nameof(numericCode));
 
-        if (!numericCode.All(char.IsDigit))
+        if (!string.IsNullOrWhiteSpace(numericCode) && !numericCode.All(char.IsDigit))
             throw new ArgumentException("Numeric code must contain only digits", nameof(numericCode));
     }
 }

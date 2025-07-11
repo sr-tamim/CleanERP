@@ -11,6 +11,7 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
 {
     public void Configure(EntityTypeBuilder<Country> builder)
     {
+        // Table name will be automatically converted to snake_case by PostgreSqlConfiguration
         builder.ToTable("Countries");
 
         // Primary key
@@ -27,12 +28,10 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
             .IsFixedLength();
 
         builder.Property(c => c.Code3)
-            .IsRequired()
             .HasMaxLength(3)
             .IsFixedLength();
 
         builder.Property(c => c.NumericCode)
-            .IsRequired()
             .HasMaxLength(3)
             .IsFixedLength();
 

@@ -4,7 +4,7 @@ using GoldenFiberERP.Domain.Interfaces.Repositories.Common;
 using GoldenFiberERP.Domain.Specifications;
 using GoldenFiberERP.Persistence.Contexts;
 
-namespace GoldenFiberERP.Infrastructure.Persistence.Repositories.Common;
+namespace GoldenFiberERP.Persistence.Repositories.Common;
 
 /// <summary>
 /// Base repository implementation providing common CRUD operations

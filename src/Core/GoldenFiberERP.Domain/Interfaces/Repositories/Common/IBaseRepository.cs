@@ -1,4 +1,5 @@
 ﻿using GoldenFiberERP.Domain.Entities.Common;
+using GoldenFiberERP.Domain.Specifications;
 
 namespace GoldenFiberERP.Domain.Interfaces.Repositories.Common
 {
@@ -10,5 +11,10 @@ namespace GoldenFiberERP.Domain.Interfaces.Repositories.Common
         Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default);
         Task DeleteAsync(int id, CancellationToken cancellationToken = default);
         Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default);
+
+        // Specification methods
+        Task<IEnumerable<T>> GetBySpecificationAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
+        Task<T?> GetFirstBySpecificationAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
+        Task<int> CountBySpecificationAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
     }
 }

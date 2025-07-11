@@ -1,9 +1,12 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using GoldenFiberERP.Application.Common.Models;
 using GoldenFiberERP.Application.Features.Settings.DTOs;
-using GoldenFiberERP.Domain.Interfaces.Repositories.Settings;
+using GoldenFiberERP.Application.Common.Interfaces;
+using GoldenFiberERP.Domain.Specifications.Settings;
+using GoldenFiberERP.Application.Common.Extensions;
 
 namespace GoldenFiberERP.Application.Features.Settings.Queries;
 
@@ -22,20 +25,20 @@ public record GetCountriesQuery : IRequest<Result<PagedResult<CountryDto>>>
 }
 
 /// <summary>
-/// Handler for GetCountriesQuery
+/// Handler for GetCountriesQuery - Updated to use specifications pattern
 /// </summary>
 public class GetCountriesQueryHandler : IRequestHandler<GetCountriesQuery, Result<PagedResult<CountryDto>>>
 {
-    private readonly ICountryRepository _countryRepository;
+    private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
     private readonly ILogger<GetCountriesQueryHandler> _logger;
 
     public GetCountriesQueryHandler(
-        ICountryRepository countryRepository,
+        IApplicationDbContext context,
         IMapper mapper,
         ILogger<GetCountriesQueryHandler> logger)
     {
-        _countryRepository = countryRepository;
+        _context = context;
         _mapper = mapper;
         _logger = logger;
     }
@@ -44,20 +47,56 @@ public class GetCountriesQueryHandler : IRequestHandler<GetCountriesQuery, Resul
     {
         try
         {
-            _logger.LogInformation("Getting countries with filters - Page: {Page}, Size: {Size}, Search: {Search}",
+            _logger.LogInformation("Getting countries with specifications - Page: {Page}, Size: {Size}, Search: {Search}",
                 request.PageNumber, request.PageSize, request.SearchTerm);
 
-            var (countries, totalCount) = await _countryRepository.GetPagedAsync(
-                request.PageNumber,
-                request.PageSize,
-                request.SearchTerm,
-                request.Region,
-                request.IsActive,
-                cancellationToken);
+            var query = _context.Countries.AsQueryable();
+
+            // Apply specifications based on request parameters
+            if (request.IsActive.HasValue)
+            {
+                if (request.IsActive.Value)
+                {
+                    var activeSpec = new ActiveCountriesSpecification();
+                    query = query.ApplySpecification(activeSpec);
+                }
+                else
+                {
+                    // For inactive countries, apply the opposite filter
+                    query = query.Where(c => !c.IsActive);
+                }
+            }
+
+            // Apply region filter
+            if (!string.IsNullOrWhiteSpace(request.Region))
+            {
+                var regionSpec = new CountriesByRegionSpecification(request.Region);
+                query = query.ApplySpecification(regionSpec);
+            }
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
+                var searchSpec = new CountriesWithSearchSpecification(request.SearchTerm);
+                query = query.ApplySpecification(searchSpec);
+            }
+
+            // Get total count before applying pagination
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            // Apply pagination
+            if (request.PageNumber > 0 && request.PageSize > 0)
+            {
+                query = query.Skip((request.PageNumber - 1) * request.PageSize)
+                            .Take(request.PageSize);
+            }
+
+            // Execute query and get countries
+            var countries = await query.ToListAsync(cancellationToken);
 
             var countryDtos = _mapper.Map<IEnumerable<CountryDto>>(countries);
 
-            // Apply sorting if specified
+            // Apply sorting if specified (done in-memory after DB query for simplicity)
             if (!string.IsNullOrEmpty(request.SortBy))
             {
                 countryDtos = request.SortBy.ToLowerInvariant() switch
@@ -84,7 +123,7 @@ public class GetCountriesQueryHandler : IRequestHandler<GetCountriesQuery, Resul
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting countries");
+            _logger.LogError(ex, "Error getting countries with specifications");
             return Result<PagedResult<CountryDto>>.Failure(new[] { "An error occurred while retrieving countries" });
         }
     }

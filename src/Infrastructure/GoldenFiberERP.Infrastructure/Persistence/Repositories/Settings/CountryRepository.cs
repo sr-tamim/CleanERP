@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using GoldenFiberERP.Domain.Entities.Settings;
 using GoldenFiberERP.Domain.Interfaces.Repositories.Settings;
+using GoldenFiberERP.Domain.Specifications;
 using GoldenFiberERP.Infrastructure.Persistence.Repositories.Common;
 using GoldenFiberERP.Persistence.Contexts;
 
@@ -88,8 +89,8 @@ public class CountryRepository : BaseRepository<Country>, ICountryRepository
             query = query.Where(c => 
                 c.Name.ToLower().Contains(lowerSearchTerm) ||
                 c.Code.ToLower().Contains(lowerSearchTerm) ||
-                c.Code3.ToLower().Contains(lowerSearchTerm) ||
-                c.Capital.ToLower().Contains(lowerSearchTerm));
+                (c.Code3 != null && c.Code3.ToLower().Contains(lowerSearchTerm)) ||
+                (c.Capital != null && c.Capital.ToLower().Contains(lowerSearchTerm)));
         }
 
         if (!string.IsNullOrWhiteSpace(region))
@@ -114,5 +115,22 @@ public class CountryRepository : BaseRepository<Country>, ICountryRepository
             .ToListAsync(cancellationToken);
 
         return (items, totalCount);
+    }
+
+    /// <summary>
+    /// Example: Get countries using specifications
+    /// </summary>
+    public async Task<IEnumerable<Country>> GetCountriesWithSpecificationAsync(ISpecification<Country> specification, CancellationToken cancellationToken = default)
+    {
+        return await GetBySpecificationAsync(specification, cancellationToken);
+    }
+
+    /// <summary>
+    /// Example: Get active countries using specification
+    /// </summary>
+    public async Task<IEnumerable<Country>> GetActiveCountriesWithSpecAsync(CancellationToken cancellationToken = default)
+    {
+        var specification = new Domain.Specifications.Settings.ActiveCountriesSpecification();
+        return await GetBySpecificationAsync(specification, cancellationToken);
     }
 }

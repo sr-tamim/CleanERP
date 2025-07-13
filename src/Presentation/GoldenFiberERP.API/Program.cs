@@ -1,6 +1,4 @@
-using GoldenFiberERP.Application;
-using GoldenFiberERP.Infrastructure;
-using GoldenFiberERP.Persistence;
+using GoldenFiberERP.CompositionRoot;
 using GoldenFiberERP.Persistence.Contexts;
 using GoldenFiberERP.Persistence.Seeders;
 using GoldenFiberERP.API.Middleware;
@@ -17,10 +15,10 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<ApiLoggingFilter>();
 });
 
-// Add layer dependencies
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddPersistence(builder.Configuration);
+// ===== COMPOSITION ROOT =====
+// This is the ONLY place where all layers are wired together
+// Following the Composition Root pattern for enterprise applications
+builder.Services.AddGoldenFiberERP(builder.Configuration);
 
 // Add API documentation
 builder.Services.AddEndpointsApiExplorer();

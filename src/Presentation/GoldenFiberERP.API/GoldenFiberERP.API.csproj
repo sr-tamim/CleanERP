@@ -21,10 +21,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Core Dependencies (for DTOs and interfaces) -->
     <ProjectReference Include="..\..\Core\GoldenFiberERP.Application\GoldenFiberERP.Application.csproj" />
     <ProjectReference Include="..\..\Core\GoldenFiberERP.Shared\GoldenFiberERP.Shared.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\GoldenFiberERP.Infrastructure\GoldenFiberERP.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\GoldenFiberERP.Persistence\GoldenFiberERP.Persistence.csproj" />
+    
+    <!-- Composition Root (ONLY dependency injection entry point) -->
+    <ProjectReference Include="..\..\CompositionRoot\GoldenFiberERP.CompositionRoot\GoldenFiberERP.CompositionRoot.csproj" />
+    
+    <!-- Infrastructure dependencies REMOVED - now handled by Composition Root -->
+    <!-- <ProjectReference Include="..\..\Infrastructure\GoldenFiberERP.Infrastructure\GoldenFiberERP.Infrastructure.csproj" /> -->
+    <!-- <ProjectReference Include="..\..\Infrastructure\GoldenFiberERP.Persistence\GoldenFiberERP.Persistence.csproj" /> -->
   </ItemGroup>
 
 </Project>

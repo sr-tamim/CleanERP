@@ -11,10 +11,10 @@ public record UpdateProductCommand : IRequest<Result>
 {
     public int Id { get; init; }
     public string Name { get; init; } = string.Empty;
-    public string? Description { get; init; }
+    public string? Description { get; init; } = null;
     public decimal Price { get; init; }
     public int StockQuantity { get; init; }
-    public string? SKU { get; init; }
+    public string? SKU { get; init; } = null;
 }
 
 public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Result>

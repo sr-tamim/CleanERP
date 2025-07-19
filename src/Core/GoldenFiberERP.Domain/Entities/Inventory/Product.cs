@@ -14,8 +14,8 @@ namespace GoldenFiberERP.Domain.Entities.Inventory
         public string Name { get; set; } = string.Empty;
         
         [StringLength(200)]
-        public string Description { get; set; } = string.Empty;
-        
+        public string? Description { get; set; } = null;
+
         public decimal Price { get; set; }
         
         public decimal Cost { get; set; }
@@ -27,13 +27,13 @@ namespace GoldenFiberERP.Domain.Entities.Inventory
         public int ReorderLevel { get; set; } = 20;
         
         [StringLength(100)]
-        public string SKU { get; set; } = string.Empty;
+        public string? SKU { get; set; } = null;
         
         [StringLength(50)]
-        public string Category { get; set; } = string.Empty;
+        public string? Category { get; set; } = null;
         
         [StringLength(20)]
-        public string Unit { get; set; } = "PCS";
+        public string? Unit { get; set; } = "PCS";
         
         public bool IsActive { get; set; } = true;
 

@@ -15,12 +15,12 @@ public record UpdateCountryCommand : IRequest<Result>
 {
     public int Id { get; init; }
     public string Name { get; init; } = string.Empty;
-    public string Capital { get; init; } = string.Empty;
-    public string CurrencyCode { get; init; } = string.Empty;
-    public string CurrencySymbol { get; init; } = string.Empty;
-    public string TimeZone { get; init; } = string.Empty;
-    public string Region { get; init; } = string.Empty;
-    public string SubRegion { get; init; } = string.Empty;
+    public string? Capital { get; init; } = null;
+    public string? CurrencyCode { get; init; } = null;
+    public string? CurrencySymbol { get; init; } = null;
+    public string? TimeZone { get; init; } = null;
+    public string? Region { get; init; } = null;
+    public string? SubRegion { get; init; } = null;
     public int DisplayOrder { get; init; } = 0;
     public bool IsActive { get; init; } = true;
 }

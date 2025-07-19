@@ -12,7 +12,7 @@ namespace GoldenFiberERP.API.Controllers.Common;
 public abstract class BaseController : ControllerBase
 {
     /// <summary>
-    /// Handles Result<T> responses and converts them to consistent API responses
+    /// Handles Result&lt;T&gt; responses and converts them to consistent API responses
     /// </summary>
     protected ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? successMessage = null)
     {

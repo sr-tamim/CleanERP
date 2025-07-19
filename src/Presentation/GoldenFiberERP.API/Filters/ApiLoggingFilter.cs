@@ -21,18 +21,18 @@ public class ApiLoggingFilter : IAsyncActionFilter
     {
         var requestId = Guid.NewGuid().ToString();
         var stopwatch = Stopwatch.StartNew();
-        
+
         // Log request details
         var request = context.HttpContext.Request;
         var controllerName = context.Controller.GetType().Name;
         var actionName = context.ActionDescriptor.DisplayName;
-        
+
         _logger.LogInformation(
             "[{RequestId}] {Method} {Path} - Controller: {Controller}, Action: {Action} - Request started",
-            requestId, 
-            request.Method, 
-            request.Path, 
-            controllerName, 
+            requestId,
+            request.Method,
+            request.Path,
+            controllerName,
             actionName);
 
         // Log request parameters (excluding sensitive data)
@@ -46,18 +46,18 @@ public class ApiLoggingFilter : IAsyncActionFilter
         }
 
         // Add request ID to response headers
-        context.HttpContext.Response.Headers.Add("X-Request-ID", requestId);
-        
+        context.HttpContext.Response.Headers.Append("X-Request-ID", requestId);
+
         // Execute the action
         var executedContext = await next();
-        
+
         stopwatch.Stop();
-        
+
         // Log response details
         var response = context.HttpContext.Response;
         var statusCode = response.StatusCode;
         var duration = stopwatch.ElapsedMilliseconds;
-        
+
         if (executedContext.Exception == null)
         {
             _logger.LogInformation(
@@ -93,7 +93,7 @@ public class ApiLoggingFilter : IAsyncActionFilter
     private object SanitizeArguments(IDictionary<string, object?> arguments)
     {
         var sanitized = new Dictionary<string, object?>();
-        
+
         foreach (var arg in arguments)
         {
             if (IsSensitiveField(arg.Key))
@@ -118,7 +118,7 @@ public class ApiLoggingFilter : IAsyncActionFilter
                 sanitized[arg.Key] = null;
             }
         }
-        
+
         return sanitized;
     }
 

@@ -3,8 +3,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using GoldenFiberERP.Application.Common.Interfaces;
 using GoldenFiberERP.Domain.Interfaces.Repositories.Inventory;
+using GoldenFiberERP.Domain.Interfaces.Repositories.Settings;
 using GoldenFiberERP.Persistence.Contexts;
 using GoldenFiberERP.Persistence.Repositories;
+using GoldenFiberERP.Persistence.Repositories.Settings;
 
 namespace GoldenFiberERP.Persistence;
 
@@ -25,6 +27,7 @@ public static class DependencyInjection
 
         // Register repositories
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<ICountryRepository, CountryRepository>();
 
         return services;
     }

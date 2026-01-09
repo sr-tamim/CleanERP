@@ -349,7 +349,7 @@ public interface IApplicationDbContext
 
 #### 3.1 Create Repository Implementation
 
-**Location:** `src/Infrastructure/GoldenFiberERP.Infrastructure/Persistence/Repositories/{ModuleName}/{EntityName}Repository.cs`
+**Location:** `src/Infrastructure/GoldenFiberERP.Persistence/Repositories/{ModuleName}/{EntityName}Repository.cs`
 
 ```csharp
 using Microsoft.EntityFrameworkCore;
@@ -357,7 +357,7 @@ using GoldenFiberERP.Domain.Entities.Settings;
 using GoldenFiberERP.Domain.Interfaces.Repositories.Settings;
 using GoldenFiberERP.Persistence.Contexts;
 
-namespace GoldenFiberERP.Infrastructure.Persistence.Repositories.Settings;
+namespace GoldenFiberERP.Persistence.Repositories.Settings;
 
 public class CountryRepository : ICountryRepository
 {
@@ -437,15 +437,15 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWor
 
 #### 3.4 Register Repository in DI
 
-**Location:** `src/Infrastructure/GoldenFiberERP.Infrastructure/DependencyInjection.cs`
+**Location:** `src/Infrastructure/GoldenFiberERP.Persistence/DependencyInjection.cs`
 
 ```csharp
-public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
 {
     // ... existing registrations ...
 
     // Register repositories
-    services.AddTransient<ICountryRepository, CountryRepository>(); // Add new repository
+    services.AddScoped<ICountryRepository, CountryRepository>(); // Add new repository
 
     // ... rest of the registrations ...
 }
@@ -655,7 +655,7 @@ When adding a new feature, ensure you create/update these files:
 Refer to the Country feature implementation as a complete example:
 - Domain: `src/Core/GoldenFiberERP.Domain/Entities/Settings/Country.cs`
 - Application: `src/Core/GoldenFiberERP.Application/Features/Settings/`
-- Infrastructure: `src/Infrastructure/GoldenFiberERP.Infrastructure/Persistence/Repositories/Settings/CountryRepository.cs`
+- Persistence: `src/Infrastructure/GoldenFiberERP.Persistence/Repositories/Settings/CountryRepository.cs`
 - Presentation: `src/Presentation/GoldenFiberERP.API/Controllers/Settings/CountriesController.cs`
 
 Following this pattern ensures consistency across the codebase and maintains the Clean Architecture principles.

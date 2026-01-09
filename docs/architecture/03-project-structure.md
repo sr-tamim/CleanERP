@@ -118,12 +118,6 @@ GoldenFiberERP.Infrastructure/
 ├── DependencyInjection.cs     # Service registration
 ├── README.md                  # Infrastructure documentation
 ├── Extensions/                # Extension methods
-├── Persistence/               # Data access implementations
-│   └── Repositories/          # Repository implementations
-│       ├── Common/            # Base repository implementations
-│       ├── Inventory/         # Inventory repositories
-│       └── Settings/          # Settings repositories
-│           └── CountryRepository.cs # Country repository
 └── Services/                  # External service implementations
     ├── EmailService.cs        # Email service implementation
     ├── FileService.cs         # File service implementation
@@ -143,7 +137,10 @@ GoldenFiberERP.Persistence/
 │       └── CountryConfiguration.cs # Country EF configuration
 ├── Contexts/                  # Database contexts
 │   └── ApplicationDbContext.cs # Main database context
-├── Repositories/              # Additional repository implementations
+├── Repositories/              # Repository implementations
+│   ├── Common/                # Base repository implementations
+│   └── Settings/              # Settings repositories
+│       └── CountryRepository.cs # Country repository
 └── Seeders/                   # Database seeders
 ```
 │   ├── FileService.cs

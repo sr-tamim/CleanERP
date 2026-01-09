@@ -2,10 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using GoldenFiberERP.Domain.Entities.Settings;
 using GoldenFiberERP.Domain.Interfaces.Repositories.Settings;
 using GoldenFiberERP.Domain.Specifications;
-using GoldenFiberERP.Infrastructure.Persistence.Repositories.Common;
+using GoldenFiberERP.Persistence.Repositories.Common;
 using GoldenFiberERP.Persistence.Contexts;
 
-namespace GoldenFiberERP.Infrastructure.Persistence.Repositories.Settings;
+namespace GoldenFiberERP.Persistence.Repositories.Settings;
 
 /// <summary>
 /// Repository implementation for Country entity

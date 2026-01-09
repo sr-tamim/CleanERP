@@ -30,8 +30,8 @@ The Infrastructure layer implements the interfaces defined in the Application an
 The Infrastructure layer is currently implemented and includes:
 
 **Projects**:
-- `GoldenFiberERP.Infrastructure` - External services and repository implementations
-- `GoldenFiberERP.Persistence` - Database-specific implementations
+- `GoldenFiberERP.Infrastructure` - External services and infrastructure concerns
+- `GoldenFiberERP.Persistence` - Database-specific implementations and repositories
 
 ### Current Project Structure
 
@@ -44,12 +44,6 @@ GoldenFiberERP.Infrastructure/
 ├── DependencyInjection.cs     # Service registration
 ├── README.md                  # Infrastructure documentation
 ├── Extensions/                # Extension methods and utilities
-├── Persistence/               # Repository implementations
-│   └── Repositories/          # Repository implementations
-│       ├── Common/            # Base repository patterns
-│       ├── Inventory/         # Inventory repositories
-│       └── Settings/          # Settings repositories
-│           └── CountryRepository.cs # Country repository implementation
 └── Services/                  # External service implementations
     └── (planned implementations)
 ```
@@ -67,8 +61,10 @@ GoldenFiberERP.Persistence/
 │       └── CountryConfiguration.cs # Country EF configuration
 ├── Contexts/                  # Database contexts
 │   └── ApplicationDbContext.cs # Main EF DbContext
-├── Repositories/              # Additional repository implementations
-│   └── (if needed)
+├── Repositories/              # Repository implementations
+│   ├── Common/                # Base repository patterns
+│   └── Settings/              # Settings repositories
+│       └── CountryRepository.cs # Country repository implementation
 └── Seeders/                   # Database seeders and initial data
     └── (seeding implementations)
 ```

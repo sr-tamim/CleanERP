@@ -7,7 +7,7 @@ using GoldenFiberERP.Application.Common.Interfaces;
 using GoldenFiberERP.Application.Common.Models;
 using GoldenFiberERP.Persistence.Contexts;
 
-namespace GoldenFiberERP.Infrastructure.Services;
+namespace GoldenFiberERP.Persistence.Services;
 
 public class HealthCheckService : IHealthCheckService
 {
@@ -136,7 +136,7 @@ public class HealthCheckService : IHealthCheckService
 
             // Check if Products table exists (schema validation for manual management)
             using var tableCmd = new NpgsqlCommand(
-                "SELECT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'Products')", connection);
+                "SELECT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'products')", connection);
             var productsTableExists = (bool)(await tableCmd.ExecuteScalarAsync(cancellationToken) ?? false);
 
             // Get table count
@@ -207,11 +207,11 @@ public class HealthCheckService : IHealthCheckService
 
             var expectedTables = new[]
             {
-                "Products",
-                "Categories", 
-                "Users",
-                "Orders",
-                "OrderItems"
+                "products",
+                "categories",
+                "users",
+                "orders",
+                "order_items"
             };
 
             var tableStatuses = new List<TableStatus>();

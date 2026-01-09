@@ -29,8 +29,6 @@ public static class DependencyInjection
         services.AddSingleton<ICacheService, InMemoryCacheService>();
         services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IFileService, FileService>();
-        services.AddTransient<IHealthCheckService, HealthCheckService>();
-
         return services;
     }
 }

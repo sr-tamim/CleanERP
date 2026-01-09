@@ -7,6 +7,7 @@ using GoldenFiberERP.Domain.Interfaces.Repositories.Settings;
 using GoldenFiberERP.Persistence.Contexts;
 using GoldenFiberERP.Persistence.Repositories;
 using GoldenFiberERP.Persistence.Repositories.Settings;
+using GoldenFiberERP.Persistence.Services;
 
 namespace GoldenFiberERP.Persistence;
 
@@ -28,6 +29,7 @@ public static class DependencyInjection
         // Register repositories
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICountryRepository, CountryRepository>();
+        services.AddTransient<IHealthCheckService, HealthCheckService>();
 
         return services;
     }

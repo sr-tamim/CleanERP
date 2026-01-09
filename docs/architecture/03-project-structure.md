@@ -141,6 +141,8 @@ GoldenFiberERP.Persistence/
 │   ├── Common/                # Base repository implementations
 │   └── Settings/              # Settings repositories
 │       └── CountryRepository.cs # Country repository
+├── Services/                  # Database-related services
+│   └── HealthCheckService.cs  # Database health checks
 └── Seeders/                   # Database seeders
 ```
 │   ├── FileService.cs

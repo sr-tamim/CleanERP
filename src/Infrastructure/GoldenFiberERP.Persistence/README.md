@@ -25,6 +25,12 @@ This is the Persistence layer of the GoldenFiberERP system, responsible for data
   - Settings-specific queries and paging
   - Specification-based query helpers
 
+### Services
+- **HealthCheckService**: Implementation of `IHealthCheckService`
+  - Database connectivity checks
+  - PostgreSQL-specific diagnostics
+  - Schema validation for manual management
+
 ### Seeders
 - **ApplicationDbContextSeed**: Database seeding with sample data
   - Initial product data for textile/fiber industry
@@ -45,6 +51,9 @@ This is the Persistence layer of the GoldenFiberERP system, responsible for data
 - Testable and mockable interfaces
 - Consistent error handling
 - Shared base repository for common CRUD and specification support
+ 
+### Health Checks
+- Database health checks live in Persistence to keep DB access in one place
 
 ### Database Seeding
 - Sample data for development and testing

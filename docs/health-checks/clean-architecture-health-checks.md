@@ -74,8 +74,8 @@ public interface IHealthCheckService
 }
 ```
 
-#### 4. **Infrastructure Layer** (`GoldenFiberERP.Infrastructure`)
-**Role**: Implement the interfaces, handle external dependencies (database, etc.)
+#### 4. **Persistence Layer** (`GoldenFiberERP.Persistence`)
+**Role**: Implement database-related interfaces and handle database access
 
 ```csharp
 public class HealthCheckService : IHealthCheckService
@@ -111,7 +111,7 @@ public class HealthCheckService : IHealthCheckService
           │ IHealthCheckService
           ▼
 ┌─────────────────────┐
-│  Infrastructure     │  ── Database Access, External Services
+│  Persistence        │  ── Database Access
 │  (HealthCheckService)│
 └─────────────────────┘
 ```
@@ -160,7 +160,7 @@ src/
 │                   ├── GetDatabaseInfoQuery.cs
 │                   └── ValidateDatabaseSchemaQuery.cs
 └── Infrastructure/
-    └── GoldenFiberERP.Infrastructure/
+    └── GoldenFiberERP.Persistence/
         └── Services/
             └── HealthCheckService.cs         # Implementation with DB access
 ```
@@ -175,7 +175,7 @@ src/
 ### 2. **Proper Error Handling**
 - Application layer returns `Result<T>` objects
 - Controllers translate to appropriate HTTP status codes
-- Infrastructure layer handles actual exceptions
+- Persistence layer handles actual exceptions
 
 ### 3. **Extensibility**
 - Easy to add new health check types
@@ -193,7 +193,7 @@ src/
 The **standard Clean Architecture approach** requires:
 1. Controllers that only handle HTTP concerns
 2. Application layer with CQRS queries/commands
-3. Infrastructure layer implementing interfaces
+3. Persistence layer implementing interfaces
 4. Proper dependency injection and inversion
 
 Thank you for the correction - this is now a properly architected Clean Architecture implementation that follows all the established patterns and principles!

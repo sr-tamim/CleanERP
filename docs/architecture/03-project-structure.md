@@ -71,9 +71,11 @@ GoldenFiberERP.Domain/
 │           └── ICountryRepository.cs  # Country repository interface
 ├── Services/                   # Domain services
 │   ├── Inventory/              # Inventory-related domain services
-│   │   └── IStockManagementService.cs # Stock management business logic
+│   │   ├── IStockManagementService.cs # Stock management contract
+│   │   └── StockManagementService.cs  # Stock management logic
 │   └── Pricing/                # Pricing-related domain services
-│       └── IPricingService.cs  # Pricing calculation business logic
+│       ├── IPricingService.cs  # Pricing contract
+│       └── PricingService.cs   # Pricing calculation logic
 ├── Specifications/             # Domain specifications
 └── ValueObjects/              # Value objects
 ```

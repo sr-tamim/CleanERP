@@ -489,6 +489,7 @@ public record Money
 ## Domain Services
 
 ### StockManagementService
+**Files**: `Services/Inventory/IStockManagementService.cs`, `Services/Inventory/StockManagementService.cs`
 ```csharp
 public interface IStockManagementService
 {
@@ -500,6 +501,7 @@ public interface IStockManagementService
 ```
 
 ### PricingService
+**Files**: `Services/Pricing/IPricingService.cs`, `Services/Pricing/PricingService.cs`
 ```csharp
 public interface IPricingService
 {

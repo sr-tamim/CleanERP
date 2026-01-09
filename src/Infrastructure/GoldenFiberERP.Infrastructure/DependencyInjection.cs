@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using GoldenFiberERP.Application.Common.Interfaces;
 using GoldenFiberERP.Infrastructure.Services;
-using GoldenFiberERP.Infrastructure.Services.Domain;
 using GoldenFiberERP.Domain.Services.Inventory;
 using GoldenFiberERP.Domain.Services.Pricing;
 

@@ -155,7 +155,71 @@ Swagger is configured with module-wise docs (inventory, auth, sales, system, etc
 
 Controllers are categorized based on naming conventions via `SwaggerOperationFilter`.
 
-## 11) Configuration and Bootstrapping
+## 11) Patterns Used
+
+### Clean Architecture
+- **Purpose**: Keep business rules independent of frameworks and IO.
+- **How it’s used**: Domain/Application are core; Infrastructure/Persistence implement external concerns.
+- **Why it helps**: Core logic is testable and stable even if tech changes.
+
+### Composition Root
+- **Purpose**: Centralize all dependency wiring.
+- **How it’s used**: `AddGoldenFiberERP` registers Application, Infrastructure, Persistence.
+- **Why it helps**: Prevents accidental cross‑layer references.
+
+### CQRS
+- **Purpose**: Separate read and write use cases.
+- **How it’s used**: `Command` and `Query` records + handlers via MediatR.
+- **Why it helps**: Clearer intent and easier scaling for reads vs writes.
+
+### Repository Pattern
+- **Purpose**: Hide data access details behind interfaces.
+- **How it’s used**: Domain defines interfaces; Persistence implements with EF Core.
+- **Why it helps**: Application doesn’t depend on EF or SQL.
+
+### Unit of Work
+- **Purpose**: Commit multiple changes as a single transaction.
+- **How it’s used**: `IUnitOfWork.SaveChangesAsync()` in handlers.
+- **Why it helps**: Keeps data consistent across multiple repository calls.
+
+### Specification Pattern
+- **Purpose**: Reuse query filters and ordering logic.
+- **How it’s used**: Domain specs like `ActiveCountriesSpecification`.
+- **Why it helps**: Avoids duplicating query logic in handlers.
+
+### Pipeline Behaviors
+- **Purpose**: Apply cross‑cutting logic around every request.
+- **How it’s used**: MediatR behaviors for logging, validation, caching, retry.
+- **Why it helps**: One place to change behavior for all handlers.
+
+### Result Pattern
+- **Purpose**: Standardize success/failure results.
+- **How it’s used**: Handlers return `Result`/`Result<T>`.
+- **Why it helps**: Consistent API responses and error handling.
+
+### Domain Events
+- **Purpose**: Signal that a business fact occurred.
+- **How it’s used**: Entities raise events (e.g., `CountryCreatedEvent`).
+- **Why it helps**: Decouples side effects (audit, notifications) from core logic.
+
+### Value Objects
+- **Purpose**: Model domain concepts as immutable types.
+- **How it’s used**: Types like `Money`, `Email`, `ProductSku`.
+- **Why it helps**: Centralizes validation and reduces primitive misuse.
+
+## 12) AutoMapper and MediatR
+
+### AutoMapper
+- **Purpose**: Maps entities to DTOs and vice versa without repetitive code.
+- **How it’s used**: Handlers inject `IMapper` and call `_mapper.Map<Dto>(entity)`.
+- **Where configured**: `src/Core/GoldenFiberERP.Application/DependencyInjection.cs` registers all profiles.
+
+### MediatR
+- **Purpose**: Decouples controllers from business logic via CQRS handlers.
+- **How it’s used**: Controllers call `_mediator.Send(commandOrQuery)`, handlers execute.
+- **Pipeline**: Behaviors run before/after handlers (logging, validation, caching, etc.).
+
+## 13) Configuration and Bootstrapping
 
 Configuration is read from `appsettings.json` and environment overrides. The current code uses:
 - `ConnectionStrings:DefaultConnection` for EF Core (`AddPersistence`).
@@ -168,7 +232,7 @@ Configuration is read from `appsettings.json` and environment overrides. The cur
 Key file:
 - `src/Presentation/GoldenFiberERP.API/Program.cs`
 
-## 12) Project Roles (Application, Infrastructure, Persistence)
+## 14) Project Roles (Application, Infrastructure, Persistence)
 
 ### Application Project (`src/Core/GoldenFiberERP.Application`)
 - **Purpose**: Holds use cases and business workflows without external dependencies.
@@ -185,7 +249,7 @@ Key file:
 - **What lives here**: `ApplicationDbContext`, EF configurations, repositories, seeders, and DB health checks.
 - **Why it matters**: Isolates database details and makes it easy to switch or test storage.
 
-## 13) How to Explain This to a Junior Dev
+## 15) How to Explain This to a Junior Dev
 
 Quick script:
 

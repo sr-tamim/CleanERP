@@ -3,7 +3,7 @@ using GoldenFiberERP.Domain.Events.Inventory;
 using GoldenFiberERP.Domain.Exceptions;
 using GoldenFiberERP.Domain.Services.Inventory;
 
-namespace GoldenFiberERP.Domain.Services.Inventory;
+namespace GoldenFiberERP.Infrastructure.Services.Domain;
 
 /// <summary>
 /// Implementation of stock management domain service

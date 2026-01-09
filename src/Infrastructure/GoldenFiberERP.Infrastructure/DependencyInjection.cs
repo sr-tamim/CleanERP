@@ -5,6 +5,7 @@ using GoldenFiberERP.Application.Common.Interfaces;
 using GoldenFiberERP.Infrastructure.Services;
 using GoldenFiberERP.Domain.Services.Inventory;
 using GoldenFiberERP.Domain.Services.Pricing;
+using GoldenFiberERP.Infrastructure.Services.Domain;
 
 namespace GoldenFiberERP.Infrastructure;
 

@@ -1,7 +1,7 @@
 using GoldenFiberERP.Domain.Services.Pricing;
 using GoldenFiberERP.Domain.ValueObjects;
 
-namespace GoldenFiberERP.Domain.Services.Pricing;
+namespace GoldenFiberERP.Infrastructure.Services.Domain;
 
 /// <summary>
 /// Implementation of pricing domain service

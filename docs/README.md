@@ -54,6 +54,7 @@ Health monitoring and diagnostic system documentation:
 | [Design Patterns](architecture/08-design-patterns.md) | Patterns used throughout the system |
 | [Technology Stack](architecture/09-technology-stack.md) | Technologies, frameworks, and tools |
 | [Deployment Architecture](architecture/10-deployment-architecture.md) | Deployment and infrastructure setup |
+| [Architecture Flow Guide](architecture/11-architecture-flow.md) | How requests flow through the system |
 
 ### Swagger Documentation
 | Document | Description |

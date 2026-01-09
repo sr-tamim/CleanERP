@@ -14,6 +14,7 @@ This folder contains comprehensive architecture documentation for the GoldenFibe
 - **[Design Patterns](./08-design-patterns.md)** - Implemented design patterns and architectural decisions
 - **[Technology Stack](./09-technology-stack.md)** - Technologies, frameworks, and tools used
 - **[Deployment Architecture](./10-deployment-architecture.md)** - Docker containerization and deployment strategy
+- **[Architecture Flow Guide](./11-architecture-flow.md)** - End-to-end request flow and wiring
 
 ## Development Guidelines
 

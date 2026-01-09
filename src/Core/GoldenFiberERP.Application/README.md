@@ -7,7 +7,7 @@ This is the Application layer of the GoldenFiberERP system, following Clean Arch
 ### Common
 - **Behaviors/**: Cross-cutting concerns like validation behaviors for MediatR pipeline
 - **Exceptions/**: Application-specific exceptions
-- **Interfaces/**: Contracts for external dependencies (database, services, etc.)
+- **Interfaces/**: Contracts for external dependencies (repositories, services, etc.)
 - **Mappers/**: AutoMapper profiles for object mapping
 - **Models/**: Common models like Result patterns
 
@@ -42,7 +42,6 @@ Organized by business domains, following the CQRS pattern:
 - `MediatR` - CQRS and mediator pattern
 - `AutoMapper` - Object mapping
 - `FluentValidation` - Input validation
-- `Microsoft.EntityFrameworkCore` - Database access abstraction
 
 ## Example Usage
 

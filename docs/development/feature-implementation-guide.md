@@ -194,12 +194,12 @@ public record CreateCountryCommand : IRequest<Result<int>>
 public class CreateCountryCommandHandler : IRequestHandler<CreateCountryCommand, Result<int>>
 {
     private readonly ICountryRepository _repository;
-    private readonly IApplicationDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateCountryCommandHandler(ICountryRepository repository, IApplicationDbContext context)
+    public CreateCountryCommandHandler(ICountryRepository repository, IUnitOfWork unitOfWork)
     {
         _repository = repository;
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<int>> Handle(CreateCountryCommand request, CancellationToken cancellationToken)
@@ -219,7 +219,7 @@ public class CreateCountryCommandHandler : IRequestHandler<CreateCountryCommand,
 
         // Save to repository
         await _repository.AddAsync(country, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<int>.Success(country.Id);
     }
@@ -331,19 +331,11 @@ public class CountryMappingProfile : Profile
 }
 ```
 
-#### 2.6 Update Application DbContext Interface
+#### 2.6 Update Persistence DbContext (if needed)
 
-**Location:** `src/Core/GoldenFiberERP.Application/Common/Interfaces/IApplicationDbContext.cs`
+**Location:** `src/Infrastructure/GoldenFiberERP.Persistence/Contexts/ApplicationDbContext.cs`
 
-```csharp
-public interface IApplicationDbContext
-{
-    DbSet<Product> Products { get; }
-    DbSet<Country> Countries { get; } // Add new entity
-    
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-}
-```
+Add a new `DbSet<T>` for the entity if the module requires it.
 
 ### 3. Infrastructure Layer Implementation
 
@@ -424,7 +416,7 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
 **Location:** `src/Infrastructure/GoldenFiberERP.Persistence/Contexts/ApplicationDbContext.cs`
 
 ```csharp
-public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWork
+public class ApplicationDbContext : DbContext, IUnitOfWork
 {
     // ... existing code ...
 
@@ -633,7 +625,7 @@ When adding a new feature, ensure you create/update these files:
 - [ ] Queries and handlers (`Features/{Module}/Queries/`)
 - [ ] Validators (`Features/{Module}/Validators/`)
 - [ ] Mapping profiles (`Features/{Module}/Mappers/{Entity}MappingProfile.cs`)
-- [ ] Update `IApplicationDbContext` interface
+- [ ] Update `ApplicationDbContext` (Persistence) for new DbSet if needed
 
 ### Infrastructure Layer
 - [ ] Repository implementation (`Persistence/Repositories/{Module}/{Entity}Repository.cs`)

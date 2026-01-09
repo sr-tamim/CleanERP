@@ -78,7 +78,7 @@ GoldenFiberERP.Persistence/
 #### ApplicationDbContext
 ```csharp
 // Contexts/ApplicationDbContext.cs
-public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWork
+public class ApplicationDbContext : DbContext, IUnitOfWork
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime _dateTime;

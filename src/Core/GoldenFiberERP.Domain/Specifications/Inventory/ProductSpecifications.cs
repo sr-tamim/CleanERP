@@ -59,35 +59,41 @@ public class ProductsWithSearchSpecification : BaseSpecification<Product>
 public class ProductsWithFiltersSpecification : BaseSpecification<Product>
 {
     public ProductsWithFiltersSpecification(
-        string? searchTerm = null,
         string? category = null,
-        bool? isActive = null,
-        int skip = 0,
-        int take = 50)
+        decimal? minPrice = null,
+        decimal? maxPrice = null,
+        bool? lowStockOnly = null,
+        bool? activeOnly = null,
+        string? searchTerm = null,
+        int? skip = null,
+        int? take = null)
+        : base(BuildCriteria(category, minPrice, maxPrice, lowStockOnly, activeOnly, searchTerm))
     {
-        // Build the criteria expression
-        var criteria = BuildCriteria(searchTerm, category, isActive);
-        
-        if (criteria != null)
-        {
-            // Note: This is a simplified approach. In a real implementation,
-            // you might want to use a more sophisticated expression builder
-        }
-
         AddOrderBy(p => p.Name);
-        ApplyPaging(skip, take);
+        if (skip.HasValue && take.HasValue)
+        {
+            ApplyPaging(skip.Value, take.Value);
+        }
     }
 
     private static System.Linq.Expressions.Expression<Func<Product, bool>>? BuildCriteria(
-        string? searchTerm, 
-        string? category, 
-        bool? isActive)
+        string? category,
+        decimal? minPrice,
+        decimal? maxPrice,
+        bool? lowStockOnly,
+        bool? activeOnly,
+        string? searchTerm)
     {
         return p => !p.IsDeleted &&
-                   (isActive == null || p.IsActive == isActive) &&
+                   (activeOnly != true || p.IsActive) &&
                    (string.IsNullOrEmpty(category) || p.Category == category) &&
-                   (string.IsNullOrEmpty(searchTerm) || 
+                   (!minPrice.HasValue || p.Price >= minPrice.Value) &&
+                   (!maxPrice.HasValue || p.Price <= maxPrice.Value) &&
+                   (!lowStockOnly.GetValueOrDefault() || p.StockQuantity <= p.MinimumStockLevel) &&
+                   (string.IsNullOrEmpty(searchTerm) ||
                     p.Name.Contains(searchTerm) ||
-                    p.Description.Contains(searchTerm));
+                    p.Description.Contains(searchTerm) ||
+                    p.SKU.Contains(searchTerm) ||
+                    p.Category.Contains(searchTerm));
     }
 }

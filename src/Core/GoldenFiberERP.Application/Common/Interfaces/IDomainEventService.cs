@@ -8,13 +8,6 @@ namespace GoldenFiberERP.Application.Common.Interfaces;
 public interface IDomainEventService
 {
     /// <summary>
-    /// Dispatch all domain events from entities in the given context
-    /// </summary>
-    /// <param name="context">The database context containing entities with domain events</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    Task DispatchEventsAsync(IApplicationDbContext context, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Dispatch a specific domain event
     /// </summary>
     /// <param name="domainEvent">The domain event to dispatch</param>

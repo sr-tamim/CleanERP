@@ -22,8 +22,7 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString, b =>
                 b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-        // Register DbContext as IApplicationDbContext and IUnitOfWork
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        // Register DbContext as IUnitOfWork
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
         // Register repositories

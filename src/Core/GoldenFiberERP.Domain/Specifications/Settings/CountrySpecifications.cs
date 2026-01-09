@@ -53,20 +53,16 @@ public class CountriesWithFiltersSpecification : BaseSpecification<Country>
         string? searchTerm = null,
         string? region = null,
         bool? isActive = null,
-        int skip = 0,
-        int take = 50)
+        int? skip = null,
+        int? take = null)
+        : base(BuildCriteria(searchTerm, region, isActive))
     {
-        // Build the criteria expression
-        var criteria = BuildCriteria(searchTerm, region, isActive);
-        
-        if (criteria != null)
-        {
-            // Apply the combined criteria
-        }
-
         AddOrderBy(c => c.DisplayOrder);
         AddOrderBy(c => c.Name);
-        ApplyPaging(skip, take);
+        if (skip.HasValue && take.HasValue)
+        {
+            ApplyPaging(skip.Value, take.Value);
+        }
     }
 
     private static System.Linq.Expressions.Expression<Func<Country, bool>>? BuildCriteria(

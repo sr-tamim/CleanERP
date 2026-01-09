@@ -1,9 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MediatR;
 using GoldenFiberERP.Application.Common.Interfaces;
 using GoldenFiberERP.Domain.Events;
-using GoldenFiberERP.Domain.Entities.Common;
 
 namespace GoldenFiberERP.Infrastructure.Services;
 
@@ -19,42 +17,6 @@ public class DomainEventService : IDomainEventService
     {
         _logger = logger;
         _mediator = mediator;
-    }
-
-    public async Task DispatchEventsAsync(IApplicationDbContext context, CancellationToken cancellationToken = default)
-    {
-        // Since IApplicationDbContext doesn't expose ChangeTracker, we need to cast to DbContext
-        if (context is not DbContext dbContext)
-        {
-            _logger.LogWarning("Context is not a DbContext, cannot dispatch domain events");
-            return;
-        }
-
-        var domainEventEntities = dbContext.ChangeTracker
-            .Entries<BaseEntity>()
-            .Select(x => x.Entity)
-            .Where(x => x.DomainEvents.Any())
-            .ToArray();
-
-        var domainEvents = domainEventEntities
-            .SelectMany(x => x.DomainEvents)
-            .ToArray();
-
-        if (!domainEvents.Any())
-        {
-            return;
-        }
-
-        _logger.LogInformation("Dispatching {Count} domain events", domainEvents.Length);
-
-        // Clear domain events from entities
-        foreach (var entity in domainEventEntities)
-        {
-            entity.ClearDomainEvents();
-        }
-
-        // Dispatch events
-        await DispatchEventsAsync(domainEvents, cancellationToken);
     }
 
     public async Task DispatchEventAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default)

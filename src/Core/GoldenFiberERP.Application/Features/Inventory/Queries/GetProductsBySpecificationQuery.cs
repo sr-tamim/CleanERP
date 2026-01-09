@@ -1,10 +1,9 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using GoldenFiberERP.Application.Common.Interfaces;
 using GoldenFiberERP.Application.Common.Models;
 using GoldenFiberERP.Domain.Specifications.Inventory;
-using GoldenFiberERP.Application.Common.Extensions;
+using GoldenFiberERP.Domain.Interfaces.Repositories.Inventory;
 
 namespace GoldenFiberERP.Application.Features.Inventory.Queries;
 
@@ -51,14 +50,14 @@ public record ProductDto
 /// </summary>
 public class GetProductsBySpecificationQueryHandler : IRequestHandler<GetProductsBySpecificationQuery, Result<IEnumerable<ProductDto>>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IProductRepository _productRepository;
     private readonly ILogger<GetProductsBySpecificationQueryHandler> _logger;
 
     public GetProductsBySpecificationQueryHandler(
-        IApplicationDbContext context,
+        IProductRepository productRepository,
         ILogger<GetProductsBySpecificationQueryHandler> logger)
     {
-        _context = context;
+        _productRepository = productRepository;
         _logger = logger;
     }
 
@@ -68,80 +67,41 @@ public class GetProductsBySpecificationQueryHandler : IRequestHandler<GetProduct
         {
             _logger.LogInformation("Executing product query with specifications");
 
-            var query = _context.Products.AsQueryable();
+            var specification = new ProductsWithFiltersSpecification(
+                category: request.Category,
+                minPrice: request.MinPrice,
+                maxPrice: request.MaxPrice,
+                lowStockOnly: request.LowStockOnly,
+                activeOnly: request.ActiveOnly,
+                searchTerm: request.SearchTerm,
+                skip: request.Skip,
+                take: request.Take);
 
-            // Apply specifications based on request parameters
-            if (request.LowStockOnly == true)
+            var products = await _productRepository.GetBySpecificationAsync(specification, cancellationToken);
+
+            var productDtos = products.Select(p => new ProductDto
             {
-                var lowStockSpec = new LowStockProductsSpecification();
-                query = query.ApplySpecification(lowStockSpec);
-            }
-            else if (request.ActiveOnly == true)
-            {
-                var activeSpec = new ActiveProductsSpecification();
-                query = query.ApplySpecification(activeSpec);
-            }
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                SKU = p.SKU,
+                Category = p.Category,
+                Price = p.Price,
+                Cost = p.Cost,
+                StockQuantity = p.StockQuantity,
+                MinimumStockLevel = p.MinimumStockLevel,
+                ReorderLevel = p.ReorderLevel,
+                Unit = p.Unit,
+                IsActive = p.IsActive,
+                IsLowStock = p.StockQuantity <= p.MinimumStockLevel,
+                NeedsReorder = p.StockQuantity <= p.ReorderLevel,
+                CreatedAt = p.CreatedAt,
+                UpdatedAt = p.UpdatedAt
+            }).ToList();
 
-            // Apply category filter
-            if (!string.IsNullOrWhiteSpace(request.Category))
-            {
-                var categorySpec = new ProductsByCategorySpecification(request.Category);
-                query = query.ApplySpecification(categorySpec);
-            }
+            _logger.LogInformation("Retrieved {Count} products matching specifications", productDtos.Count);
 
-            // Apply price range filter
-            if (request.MinPrice.HasValue || request.MaxPrice.HasValue)
-            {
-                var minPrice = request.MinPrice ?? 0;
-                var maxPrice = request.MaxPrice ?? decimal.MaxValue;
-                var priceRangeSpec = new ProductsByPriceRangeSpecification(minPrice, maxPrice);
-                query = query.ApplySpecification(priceRangeSpec);
-            }
-
-            // Apply search filter
-            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
-            {
-                var searchSpec = new ProductSearchSpecification(request.SearchTerm);
-                query = query.ApplySpecification(searchSpec);
-            }
-
-            // Apply paging if specified
-            if (request.Skip.HasValue)
-            {
-                query = query.Skip(request.Skip.Value);
-            }
-
-            if (request.Take.HasValue)
-            {
-                query = query.Take(request.Take.Value);
-            }
-
-            // Execute query and map to DTOs
-            var products = await query
-                .Select(p => new ProductDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    SKU = p.SKU,
-                    Category = p.Category,
-                    Price = p.Price,
-                    Cost = p.Cost,
-                    StockQuantity = p.StockQuantity,
-                    MinimumStockLevel = p.MinimumStockLevel,
-                    ReorderLevel = p.ReorderLevel,
-                    Unit = p.Unit,
-                    IsActive = p.IsActive,
-                    IsLowStock = p.StockQuantity <= p.MinimumStockLevel,
-                    NeedsReorder = p.StockQuantity <= p.ReorderLevel,
-                    CreatedAt = p.CreatedAt,
-                    UpdatedAt = p.UpdatedAt
-                })
-                .ToListAsync(cancellationToken);
-
-            _logger.LogInformation("Retrieved {Count} products matching specifications", products.Count);
-
-            return Result<IEnumerable<ProductDto>>.Success(products);
+            return Result<IEnumerable<ProductDto>>.Success(productDtos);
         }
         catch (Exception ex)
         {

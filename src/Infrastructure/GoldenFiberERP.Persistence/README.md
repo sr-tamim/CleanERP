@@ -5,7 +5,7 @@ This is the Persistence layer of the GoldenFiberERP system, responsible for data
 ## Structure
 
 ### Contexts
-- **ApplicationDbContext**: Main EF Core DbContext implementing `IApplicationDbContext`
+- **ApplicationDbContext**: Main EF Core DbContext implementing `IUnitOfWork`
   - Automatic audit field population (CreatedAt, UpdatedAt, CreatedBy, UpdatedBy)
   - Configuration loading from assembly
   - PostgreSQL optimized

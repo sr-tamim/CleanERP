@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace GoldenFiberERP.Persistence.Contexts;
 
-public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWork
+public class ApplicationDbContext : DbContext, IUnitOfWork
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime _dateTime;
@@ -53,7 +53,22 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWor
         // Dispatch domain events if service is available
         if (_domainEventService != null)
         {
-            await _domainEventService.DispatchEventsAsync(this, cancellationToken);
+            var domainEventEntities = ChangeTracker
+                .Entries<BaseEntity>()
+                .Select(entry => entry.Entity)
+                .Where(entity => entity.DomainEvents.Any())
+                .ToArray();
+
+            var domainEvents = domainEventEntities
+                .SelectMany(entity => entity.DomainEvents)
+                .ToArray();
+
+            foreach (var entity in domainEventEntities)
+            {
+                entity.ClearDomainEvents();
+            }
+
+            await _domainEventService.DispatchEventsAsync(domainEvents, cancellationToken);
         }
 
         return await base.SaveChangesAsync(cancellationToken);

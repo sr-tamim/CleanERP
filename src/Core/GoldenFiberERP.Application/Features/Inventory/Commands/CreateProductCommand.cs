@@ -2,6 +2,7 @@ using MediatR;
 using GoldenFiberERP.Application.Common.Interfaces;
 using GoldenFiberERP.Application.Common.Models;
 using GoldenFiberERP.Domain.Entities.Inventory;
+using GoldenFiberERP.Domain.Interfaces.Repositories.Inventory;
 
 namespace GoldenFiberERP.Application.Features.Inventory.Commands;
 
@@ -16,13 +17,13 @@ public record CreateProductCommand : IRequest<Result<int>>
 
 public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Result<int>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly IDateTime _dateTime;
+    private readonly IProductRepository _productRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateProductCommandHandler(IApplicationDbContext context, IDateTime dateTime)
+    public CreateProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork)
     {
-        _context = context;
-        _dateTime = dateTime;
+        _productRepository = productRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<int>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -45,8 +46,8 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             unit: "PCS", // Default unit
             createdBy: 0); // Default user - should come from current user service
 
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _productRepository.AddAsync(product, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<int>.Success(product.Id);
     }

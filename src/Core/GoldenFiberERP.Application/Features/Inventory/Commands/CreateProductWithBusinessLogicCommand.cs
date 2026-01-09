@@ -7,7 +7,7 @@ using GoldenFiberERP.Domain.Events.Inventory;
 using GoldenFiberERP.Domain.Services.Inventory;
 using GoldenFiberERP.Domain.Services.Pricing;
 using GoldenFiberERP.Domain.ValueObjects;
-using Microsoft.EntityFrameworkCore;
+using GoldenFiberERP.Domain.Interfaces.Repositories.Inventory;
 
 namespace GoldenFiberERP.Application.Features.Inventory.Commands;
 
@@ -33,27 +33,27 @@ public record CreateProductWithBusinessLogicCommand : IRequest<Result<int>>
 /// </summary>
 public class CreateProductWithBusinessLogicCommandHandler : IRequestHandler<CreateProductWithBusinessLogicCommand, Result<int>>
 {
-    private readonly IApplicationDbContext _context;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IStockManagementService _stockManagementService;
     private readonly IPricingService _pricingService;
     private readonly ILogger<CreateProductWithBusinessLogicCommandHandler> _logger;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IProductRepository _productRepository;
 
     public CreateProductWithBusinessLogicCommandHandler(
-        IApplicationDbContext context,
         IUnitOfWork unitOfWork,
         IStockManagementService stockManagementService,
         IPricingService pricingService,
         ILogger<CreateProductWithBusinessLogicCommandHandler> logger,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        IProductRepository productRepository)
     {
-        _context = context;
         _unitOfWork = unitOfWork;
         _stockManagementService = stockManagementService;
         _pricingService = pricingService;
         _logger = logger;
         _currentUserService = currentUserService;
+        _productRepository = productRepository;
     }
 
     public async Task<Result<int>> Handle(CreateProductWithBusinessLogicCommand request, CancellationToken cancellationToken)
@@ -78,8 +78,7 @@ public class CreateProductWithBusinessLogicCommandHandler : IRequestHandler<Crea
                 var sku = ProductSku.Create(request.SKU);
 
                 // Check if SKU already exists
-                var existingProduct = await _context.Products
-                    .FirstOrDefaultAsync(p => p.SKU == sku.Value, cancellationToken);
+                var existingProduct = await _productRepository.GetBySkuAsync(sku.Value, cancellationToken);
 
                 if (existingProduct != null)
                 {
@@ -104,8 +103,8 @@ public class CreateProductWithBusinessLogicCommandHandler : IRequestHandler<Crea
                     createdBy: userId);
 
                 // Add to context
-                _context.Products.Add(product);
-                await _context.SaveChangesAsync(cancellationToken);
+                await _productRepository.AddAsync(product, cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 // Check if initial stock triggers low stock condition
                 if (_stockManagementService.IsLowStock(product))

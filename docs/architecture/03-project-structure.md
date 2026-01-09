@@ -88,7 +88,7 @@ GoldenFiberERP.Application/
 ├── README.md                  # Application layer documentation
 ├── Common/                    # Common application concerns
 │   ├── Interfaces/            # Application interfaces
-│   │   └── IApplicationDbContext.cs # Database context interface
+│   │   └── IUnitOfWork.cs          # Transaction and save interface
 │   ├── Models/                # Common DTOs and models
 │   ├── Exceptions/            # Application exceptions
 │   └── Behaviors/             # Cross-cutting behaviors

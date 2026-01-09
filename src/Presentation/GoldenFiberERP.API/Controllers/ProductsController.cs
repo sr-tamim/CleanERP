@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MediatR;
 using GoldenFiberERP.Application.Features.Inventory.Commands;
 using GoldenFiberERP.Application.Features.Inventory.Queries;
 using GoldenFiberERP.Application.Features.Inventory.DTOs;
+using GoldenFiberERP.API.Authorization;
 
 namespace GoldenFiberERP.API.Controllers;
 
@@ -12,6 +14,7 @@ namespace GoldenFiberERP.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Tags("Products")]
+[Authorize]
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -25,6 +28,7 @@ public class ProductsController : ControllerBase
     /// Get all products
     /// </summary>
     [HttpGet]
+    [RequirePermission(Permissions.ProductRead)]
     public async Task<IActionResult> GetProducts()
     {
         var query = new GetProductsQuery();

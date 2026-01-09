@@ -21,6 +21,9 @@ This is the Persistence layer of the GoldenFiberERP system, responsible for data
   - CRUD operations
   - Business-specific queries (low stock, search by name, etc.)
   - Async operations with cancellation token support
+- **CountryRepository**: Implementation of `ICountryRepository`
+  - Settings-specific queries and paging
+  - Specification-based query helpers
 
 ### Seeders
 - **ApplicationDbContextSeed**: Database seeding with sample data
@@ -41,6 +44,7 @@ This is the Persistence layer of the GoldenFiberERP system, responsible for data
 - Business-focused query methods
 - Testable and mockable interfaces
 - Consistent error handling
+- Shared base repository for common CRUD and specification support
 
 ### Database Seeding
 - Sample data for development and testing

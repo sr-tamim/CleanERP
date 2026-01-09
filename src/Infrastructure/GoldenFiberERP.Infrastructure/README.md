@@ -1,6 +1,6 @@
 # GoldenFiberERP.Infrastructure Layer
 
-This is the Infrastructure layer of the GoldenFiberERP system, implementing external concerns and services required by the Application layer.
+This is the Infrastructure layer of the GoldenFiberERP system, implementing external concerns and services required by the Application layer. Database-specific repositories live in the Persistence project.
 
 ## Structure
 

@@ -53,6 +53,18 @@ public class ProductsWithSearchSpecification : BaseSpecification<Product>
 }
 
 /// <summary>
+/// Specification for all non-deleted products ordered by name
+/// </summary>
+public class AllProductsSpecification : BaseSpecification<Product>
+{
+    public AllProductsSpecification()
+        : base(p => !p.IsDeleted)
+    {
+        AddOrderBy(p => p.Name);
+    }
+}
+
+/// <summary>
 /// Specification for products with pagination and filtering
 /// </summary>
 public class ProductsWithFiltersSpecification : BaseSpecification<Product>

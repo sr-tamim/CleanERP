@@ -5,7 +5,6 @@ namespace GoldenFiberERP.Domain.Interfaces.Repositories.Inventory
 {
     public interface IProductRepository : IBaseRepository<Product>
     {
-        Task<Product?> GetByCode(string productCode, CancellationToken cancellationToken = default);
         Task<Product?> GetBySkuAsync(string sku, CancellationToken cancellationToken = default);
     }
 }

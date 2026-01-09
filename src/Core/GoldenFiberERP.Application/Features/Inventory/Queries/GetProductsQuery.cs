@@ -4,6 +4,7 @@ using GoldenFiberERP.Application.Common.Interfaces;
 using GoldenFiberERP.Application.Common.Models;
 using GoldenFiberERP.Application.Features.Inventory.DTOs;
 using GoldenFiberERP.Domain.Interfaces.Repositories.Inventory;
+using GoldenFiberERP.Domain.Specifications.Inventory;
 
 namespace GoldenFiberERP.Application.Features.Inventory.Queries;
 
@@ -22,10 +23,10 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, Result<
 
     public async Task<Result<List<ProductDto>>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        var products = await _productRepository.GetAllAsync(cancellationToken);
-        var orderedProducts = products.OrderBy(p => p.Name).ToList();
+        var products = await _productRepository
+            .GetBySpecificationAsync(new AllProductsSpecification(), cancellationToken);
 
-        var productDtos = _mapper.Map<List<ProductDto>>(orderedProducts);
+        var productDtos = _mapper.Map<List<ProductDto>>(products.ToList());
 
         return Result<List<ProductDto>>.Success(productDtos);
     }

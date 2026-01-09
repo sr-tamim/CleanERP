@@ -19,12 +19,6 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             .FirstOrDefaultAsync(p => p.SKU == sku, cancellationToken);
     }
 
-    public async Task<Product?> GetByCode(string productCode, CancellationToken cancellationToken = default)
-    {
-        return await _context.Products
-            .FirstOrDefaultAsync(p => p.SKU == productCode, cancellationToken);
-    }
-
     public async Task<IEnumerable<Product>> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         return await _context.Products

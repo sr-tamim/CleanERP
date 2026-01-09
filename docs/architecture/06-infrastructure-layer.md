@@ -413,32 +413,16 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
     {
     }
 
-    public async Task<Product?> GetByCode(string productCode, CancellationToken cancellationToken = default)
+    public async Task<Product?> GetBySkuAsync(string sku, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .FirstOrDefaultAsync(p => p.Code == productCode, cancellationToken);
+            .FirstOrDefaultAsync(p => p.SKU == sku, cancellationToken);
     }
 
-    public async Task<IEnumerable<Product>> GetByCategory(string category, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Product>> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Where(p => p.Category == category && p.IsActive)
-            .OrderBy(p => p.Name)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<Product>> GetLowStockProducts(CancellationToken cancellationToken = default)
-    {
-        return await _dbSet
-            .Where(p => p.StockQuantity <= p.MinimumStockLevel && p.IsActive)
-            .OrderBy(p => p.Name)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<Product>> SearchByName(string searchTerm, CancellationToken cancellationToken = default)
-    {
-        return await _dbSet
-            .Where(p => p.Name.Contains(searchTerm) && p.IsActive)
+            .Where(p => p.Name.Contains(name))
             .OrderBy(p => p.Name)
             .ToListAsync(cancellationToken);
     }

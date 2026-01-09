@@ -236,14 +236,14 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             return Result<int>.Failure(validationResult.Errors.Select(e => e.ErrorMessage));
 
         // Check business rules
-        var existingProduct = await _productRepository.GetByCode(request.Code, cancellationToken);
+        var existingProduct = await _productRepository.GetBySkuAsync(request.SKU, cancellationToken);
         if (existingProduct != null)
-            return Result<int>.Failure($"Product with code '{request.Code}' already exists");
+            return Result<int>.Failure($"Product with SKU '{request.SKU}' already exists");
 
         // Create domain entity
         var product = new Product
         {
-            Code = request.Code,
+            SKU = request.SKU,
             Name = request.Name,
             Description = request.Description,
             Category = request.Category,

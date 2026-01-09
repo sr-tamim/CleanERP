@@ -2,11 +2,11 @@ using AutoMapper;
 using GoldenFiberERP.Domain.Entities.Inventory;
 using GoldenFiberERP.Application.Features.Inventory.DTOs;
 
-namespace GoldenFiberERP.Application.Common.Mappers;
+namespace GoldenFiberERP.Application.Features.Inventory.Mappers;
 
-public class MappingProfile : Profile
+public class InventoryMappingProfile : Profile
 {
-    public MappingProfile()
+    public InventoryMappingProfile()
     {
         CreateMap<Product, ProductDto>();
         CreateMap<CreateProductDto, Product>();

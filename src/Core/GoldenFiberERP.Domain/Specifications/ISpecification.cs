@@ -34,6 +34,16 @@ public interface ISpecification<T>
     Expression<Func<T, object>>? OrderByDescending { get; }
 
     /// <summary>
+    /// Secondary order by expressions
+    /// </summary>
+    List<Expression<Func<T, object>>> ThenBy { get; }
+
+    /// <summary>
+    /// Secondary order by descending expressions
+    /// </summary>
+    List<Expression<Func<T, object>>> ThenByDescending { get; }
+
+    /// <summary>
     /// Group by expression
     /// </summary>
     Expression<Func<T, object>>? GroupBy { get; }

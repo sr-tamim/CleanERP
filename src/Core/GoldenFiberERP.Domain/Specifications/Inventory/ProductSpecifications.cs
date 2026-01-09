@@ -11,7 +11,6 @@ public class LowStockProductsSpecification : BaseSpecification<Product>
         : base(p => p.StockQuantity <= p.MinimumStockLevel && !p.IsDeleted)
     {
         AddOrderBy(p => p.StockQuantity);
-        AddInclude(p => p.Category);
     }
 }
 
@@ -47,7 +46,7 @@ public class ProductsWithSearchSpecification : BaseSpecification<Product>
     public ProductsWithSearchSpecification(string searchTerm) 
         : base(p => !p.IsDeleted && 
                    (p.Name.Contains(searchTerm) ||
-                    p.Description.Contains(searchTerm)))
+                    (p.Description != null && p.Description.Contains(searchTerm))))
     {
         AddOrderBy(p => p.Name);
     }
@@ -92,8 +91,8 @@ public class ProductsWithFiltersSpecification : BaseSpecification<Product>
                    (!lowStockOnly.GetValueOrDefault() || p.StockQuantity <= p.MinimumStockLevel) &&
                    (string.IsNullOrEmpty(searchTerm) ||
                     p.Name.Contains(searchTerm) ||
-                    p.Description.Contains(searchTerm) ||
-                    p.SKU.Contains(searchTerm) ||
-                    p.Category.Contains(searchTerm));
+                    (p.Description != null && p.Description.Contains(searchTerm)) ||
+                    (p.SKU != null && p.SKU.Contains(searchTerm)) ||
+                    (p.Category != null && p.Category.Contains(searchTerm)));
     }
 }

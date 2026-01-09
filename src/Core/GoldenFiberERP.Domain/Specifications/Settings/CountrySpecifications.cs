@@ -12,7 +12,7 @@ public class ActiveCountriesSpecification : BaseSpecification<Country>
         : base(c => c.IsActive)
     {
         AddOrderBy(c => c.DisplayOrder);
-        AddOrderBy(c => c.Name);
+        AddThenBy(c => c.Name);
     }
 }
 
@@ -25,7 +25,7 @@ public class CountriesByRegionSpecification : BaseSpecification<Country>
         : base(c => c.Region == region)
     {
         AddOrderBy(c => c.DisplayOrder);
-        AddOrderBy(c => c.Name);
+        AddThenBy(c => c.Name);
     }
 }
 
@@ -37,8 +37,8 @@ public class CountriesWithSearchSpecification : BaseSpecification<Country>
     public CountriesWithSearchSpecification(string searchTerm) 
         : base(c => c.Name.Contains(searchTerm) ||
                    c.Code.Contains(searchTerm) ||
-                   c.Code3!.Contains(searchTerm) ||
-                   c.Capital!.Contains(searchTerm))
+                   (c.Code3 != null && c.Code3.Contains(searchTerm)) ||
+                   (c.Capital != null && c.Capital.Contains(searchTerm)))
     {
         AddOrderBy(c => c.Name);
     }
@@ -58,7 +58,7 @@ public class CountriesWithFiltersSpecification : BaseSpecification<Country>
         : base(BuildCriteria(searchTerm, region, isActive))
     {
         AddOrderBy(c => c.DisplayOrder);
-        AddOrderBy(c => c.Name);
+        AddThenBy(c => c.Name);
         if (skip.HasValue && take.HasValue)
         {
             ApplyPaging(skip.Value, take.Value);
@@ -75,8 +75,8 @@ public class CountriesWithFiltersSpecification : BaseSpecification<Country>
                    (string.IsNullOrEmpty(searchTerm) || 
                     c.Name.Contains(searchTerm) ||
                     c.Code.Contains(searchTerm) ||
-                    c.Code3!.Contains(searchTerm) ||
-                    c.Capital!.Contains(searchTerm));
+                    (c.Code3 != null && c.Code3.Contains(searchTerm)) ||
+                    (c.Capital != null && c.Capital.Contains(searchTerm)));
     }
 }
 
@@ -97,7 +97,7 @@ public class CountryByCodeSpecification : BaseSpecification<Country>
 public class CountryByCode3Specification : BaseSpecification<Country>
 {
     public CountryByCode3Specification(string code3) 
-        : base(c => c.Code3 == code3.ToUpperInvariant())
+        : base(c => c.Code3 != null && c.Code3 == code3.ToUpperInvariant())
     {
     }
 }

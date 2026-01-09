@@ -79,11 +79,35 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
         // Apply ordering
         if (specification.OrderBy != null)
         {
-            query = query.OrderBy(specification.OrderBy);
+            var orderedQuery = query.OrderBy(specification.OrderBy);
+
+            foreach (var thenBy in specification.ThenBy)
+            {
+                orderedQuery = orderedQuery.ThenBy(thenBy);
+            }
+
+            foreach (var thenByDesc in specification.ThenByDescending)
+            {
+                orderedQuery = orderedQuery.ThenByDescending(thenByDesc);
+            }
+
+            query = orderedQuery;
         }
         else if (specification.OrderByDescending != null)
         {
-            query = query.OrderByDescending(specification.OrderByDescending);
+            var orderedQuery = query.OrderByDescending(specification.OrderByDescending);
+
+            foreach (var thenBy in specification.ThenBy)
+            {
+                orderedQuery = orderedQuery.ThenBy(thenBy);
+            }
+
+            foreach (var thenByDesc in specification.ThenByDescending)
+            {
+                orderedQuery = orderedQuery.ThenByDescending(thenByDesc);
+            }
+
+            query = orderedQuery;
         }
 
         // Apply group by

@@ -23,7 +23,7 @@ public class ProductsNeedingReorderSpecification : BaseSpecification<Product>
         : base(p => p.StockQuantity <= p.ReorderLevel && p.IsActive && !p.IsDeleted)
     {
         AddOrderBy(p => p.StockQuantity);
-        AddOrderBy(p => p.Name);
+        AddThenBy(p => p.Name);
     }
 }
 
@@ -33,7 +33,7 @@ public class ProductsNeedingReorderSpecification : BaseSpecification<Product>
 public class ProductsBySkuPatternSpecification : BaseSpecification<Product>
 {
     public ProductsBySkuPatternSpecification(string skuPattern) 
-        : base(p => p.SKU.Contains(skuPattern) && !p.IsDeleted)
+        : base(p => p.SKU != null && p.SKU.Contains(skuPattern) && !p.IsDeleted)
     {
         AddOrderBy(p => p.SKU);
     }
@@ -94,9 +94,9 @@ public class ProductSearchSpecification : BaseSpecification<Product>
 {
     public ProductSearchSpecification(string searchTerm) 
         : base(p => (p.Name.Contains(searchTerm) || 
-                    p.Description.Contains(searchTerm) || 
-                    p.SKU.Contains(searchTerm) ||
-                    p.Category.Contains(searchTerm)) && 
+                    (p.Description != null && p.Description.Contains(searchTerm)) || 
+                    (p.SKU != null && p.SKU.Contains(searchTerm)) ||
+                    (p.Category != null && p.Category.Contains(searchTerm))) && 
                     !p.IsDeleted)
     {
         AddOrderBy(p => p.Name);

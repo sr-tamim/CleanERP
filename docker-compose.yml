@@ -2,5 +2,5 @@ services:
   goldenfibererp.api:
     image: ${DOCKER_REGISTRY-}goldenfibererpapi
     build:
-      context: src/Presentation/GoldenFiberERP.API
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/Presentation/GoldenFiberERP.API/Dockerfile

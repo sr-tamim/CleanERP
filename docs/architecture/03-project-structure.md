@@ -2,12 +2,12 @@
 
 ## Solution Overview
 
-The GoldenFiberERP solution follows a clean, organized structure that supports the Clean Architecture principles and promotes maintainability and scalability.
+The CleanERP solution follows a clean, organized structure that supports the Clean Architecture principles and promotes maintainability and scalability.
 
 ## Root Directory Structure
 
 ```
-GoldenFiberERP.sln              # Visual Studio solution file
+CleanERP.sln              # Visual Studio solution file
 ├── docs/                       # Documentation
 │   └── architecture/           # Architecture documentation
 ├── src/                        # Source code
@@ -27,24 +27,24 @@ GoldenFiberERP.sln              # Visual Studio solution file
 
 ### Core Layer (`src/Core/`)
 
-#### Shared Project (`GoldenFiberERP.Shared`)
+#### Shared Project (`CleanERP.Shared`)
 Contains shared utilities and common functionality:
 
 ```
-GoldenFiberERP.Shared/
-├── GoldenFiberERP.Shared.csproj
+CleanERP.Shared/
+├── CleanERP.Shared.csproj
 ├── Constants/                 # Application constants
 ├── Extensions/                # Extension methods
 ├── Helpers/                   # Utility helpers
 └── Common/                    # Common shared functionality
 ```
 
-#### Domain Project (`GoldenFiberERP.Domain`)
+#### Domain Project (`CleanERP.Domain`)
 Contains the business entities, interfaces, and domain logic:
 
 ```
-GoldenFiberERP.Domain/
-├── GoldenFiberERP.Domain.csproj
+CleanERP.Domain/
+├── CleanERP.Domain.csproj
 ├── Entities/
 │   ├── Common/                 # Base entities and interfaces
 │   │   ├── BaseEntity.cs       # Base class for all entities
@@ -80,12 +80,12 @@ GoldenFiberERP.Domain/
 └── ValueObjects/              # Value objects
 ```
 
-#### Application Project (`GoldenFiberERP.Application`)
+#### Application Project (`CleanERP.Application`)
 Contains use cases, application services, and DTOs:
 
 ```
-GoldenFiberERP.Application/
-├── GoldenFiberERP.Application.csproj
+CleanERP.Application/
+├── CleanERP.Application.csproj
 ├── DependencyInjection.cs     # Dependency injection configuration
 ├── README.md                  # Application layer documentation
 ├── Common/                    # Common application concerns
@@ -111,12 +111,12 @@ GoldenFiberERP.Application/
 
 ### Infrastructure Layer (`src/Infrastructure/`)
 
-#### Infrastructure Project (`GoldenFiberERP.Infrastructure`)
+#### Infrastructure Project (`CleanERP.Infrastructure`)
 Contains external service implementations and infrastructure concerns:
 
 ```
-GoldenFiberERP.Infrastructure/
-├── GoldenFiberERP.Infrastructure.csproj
+CleanERP.Infrastructure/
+├── CleanERP.Infrastructure.csproj
 ├── DependencyInjection.cs     # Service registration
 ├── README.md                  # Infrastructure documentation
 ├── Extensions/                # Extension methods
@@ -126,12 +126,12 @@ GoldenFiberERP.Infrastructure/
     └── NotificationService.cs # Notification service implementation
 ```
 
-#### Persistence Project (`GoldenFiberERP.Persistence`)
+#### Persistence Project (`CleanERP.Persistence`)
 Contains database-specific implementations:
 
 ```
-GoldenFiberERP.Persistence/
-├── GoldenFiberERP.Persistence.csproj
+CleanERP.Persistence/
+├── CleanERP.Persistence.csproj
 ├── DependencyInjection.cs     # Persistence service registration
 ├── README.md                  # Persistence documentation
 ├── Configurations/            # Entity configurations
@@ -164,17 +164,17 @@ GoldenFiberERP.Persistence/
 
 ### Presentation Layer (`src/Presentation/`)
 
-#### API Project (`GoldenFiberERP.API`)
+#### API Project (`CleanERP.API`)
 Web API for external communication:
 
 ```
-GoldenFiberERP.API/
-├── GoldenFiberERP.API.csproj
+CleanERP.API/
+├── CleanERP.API.csproj
 ├── Program.cs                 # Application entry point
 ├── appsettings.json          # Production configuration
 ├── appsettings.Development.json # Development configuration
 ├── Dockerfile                # Container definition
-├── GoldenFiberERP.API.http   # HTTP client test file
+├── CleanERP.API.http   # HTTP client test file
 ├── WeatherForecast.cs        # Sample model (to be removed)
 ├── Controllers/              # API controllers
 │   ├── WeatherForecastController.cs # Sample controller
@@ -201,48 +201,48 @@ GoldenFiberERP.API/
 
 ### Dependency Hierarchy
 ```
-GoldenFiberERP.API
+CleanERP.API
     ↓ (references)
-    ├── GoldenFiberERP.Application
-    ├── GoldenFiberERP.Shared
-    ├── GoldenFiberERP.Infrastructure
-    └── GoldenFiberERP.Persistence
+    ├── CleanERP.Application
+    ├── CleanERP.Shared
+    ├── CleanERP.Infrastructure
+    └── CleanERP.Persistence
 
-GoldenFiberERP.Application
+CleanERP.Application
     ↓ (references)
-    └── GoldenFiberERP.Domain
+    └── CleanERP.Domain
 
-GoldenFiberERP.Infrastructure
+CleanERP.Infrastructure
     ↓ (references)
-    ├── GoldenFiberERP.Application
-    └── GoldenFiberERP.Domain
+    ├── CleanERP.Application
+    └── CleanERP.Domain
 
-GoldenFiberERP.Persistence
+CleanERP.Persistence
     ↓ (references)
-    ├── GoldenFiberERP.Application
-    └── GoldenFiberERP.Domain
+    ├── CleanERP.Application
+    └── CleanERP.Domain
 
-GoldenFiberERP.Shared
+CleanERP.Shared
     └── (standalone)
 
-GoldenFiberERP.Domain
+CleanERP.Domain
     └── (standalone)
 ```
 
 ### Current Project References
 Based on the actual project file analysis:
 
-- **GoldenFiberERP.API**: References Application, Shared, Infrastructure, and Persistence layers
-- **GoldenFiberERP.Application**: References Domain layer
-- **GoldenFiberERP.Infrastructure**: References Application and Domain layers
-- **GoldenFiberERP.Persistence**: References Application and Domain layers
-- **GoldenFiberERP.Shared**: Standalone project (no references)
-- **GoldenFiberERP.Domain**: Standalone project (correct)
+- **CleanERP.API**: References Application, Shared, Infrastructure, and Persistence layers
+- **CleanERP.Application**: References Domain layer
+- **CleanERP.Infrastructure**: References Application and Domain layers
+- **CleanERP.Persistence**: References Application and Domain layers
+- **CleanERP.Shared**: Standalone project (no references)
+- **CleanERP.Domain**: Standalone project (correct)
 
 ## Configuration Files
 
 ### Solution Level
-- **GoldenFiberERP.sln**: Visual Studio solution configuration
+- **CleanERP.sln**: Visual Studio solution configuration
 - **docker-compose.yml**: Main Docker composition
 - **docker-compose.override.yml**: Development-specific overrides
 - **docker-compose.dcproj**: Docker Compose project file
@@ -262,14 +262,14 @@ Based on the actual project file analysis:
 ```
 tests/
 ├── UnitTests/
-│   ├── GoldenFiberERP.Domain.UnitTests/
-│   ├── GoldenFiberERP.Application.UnitTests/
-│   └── GoldenFiberERP.Infrastructure.UnitTests/
+│   ├── CleanERP.Domain.UnitTests/
+│   ├── CleanERP.Application.UnitTests/
+│   └── CleanERP.Infrastructure.UnitTests/
 ├── IntegrationTests/
-│   ├── GoldenFiberERP.API.IntegrationTests/
-│   └── GoldenFiberERP.Infrastructure.IntegrationTests/
+│   ├── CleanERP.API.IntegrationTests/
+│   └── CleanERP.Infrastructure.IntegrationTests/
 └── ArchitectureTests/
-    └── GoldenFiberERP.ArchitectureTests/
+    └── CleanERP.ArchitectureTests/
 ```
 
 ### Scripts (`scripts/`)
@@ -296,10 +296,10 @@ docs/
 ### Projects
 - **Format**: `{Company}.{Product}.{Layer}`
 - **Examples**: 
-  - `GoldenFiberERP.Domain`
-  - `GoldenFiberERP.Application`
-  - `GoldenFiberERP.Infrastructure`
-  - `GoldenFiberERP.API`
+  - `CleanERP.Domain`
+  - `CleanERP.Application`
+  - `CleanERP.Infrastructure`
+  - `CleanERP.API`
 
 ### Folders
 - **PascalCase** for all folder names
@@ -333,7 +333,7 @@ docs/
 
 ### Local Development
 1. Clone the repository
-2. Open `GoldenFiberERP.sln` in Visual Studio
+2. Open `CleanERP.sln` in Visual Studio
 3. Build the solution
 4. Run using Docker Compose or IIS Express
 

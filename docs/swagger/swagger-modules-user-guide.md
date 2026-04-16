@@ -1,6 +1,6 @@
 # Module-wise Swagger Documentation
 
-This implementation provides separate Swagger documentation pages for each business module in GoldenFiberERP, allowing for better organization and navigation of API endpoints.
+This implementation provides separate Swagger documentation pages for each business module in CleanERP, allowing for better organization and navigation of API endpoints.
 
 ## Features
 

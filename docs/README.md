@@ -1,4 +1,4 @@
-# GoldenFiberERP Documentation
+# CleanERP Documentation
 
 This folder contains all project documentation organized by topic and purpose.
 

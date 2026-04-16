@@ -30,17 +30,17 @@ The Infrastructure layer implements the interfaces defined in the Application an
 The Infrastructure layer is currently implemented and includes:
 
 **Projects**:
-- `GoldenFiberERP.Infrastructure` - External services and infrastructure concerns
-- `GoldenFiberERP.Persistence` - Database-specific implementations and repositories
+- `CleanERP.Infrastructure` - External services and infrastructure concerns
+- `CleanERP.Persistence` - Database-specific implementations and repositories
 
 ### Current Project Structure
 
-#### GoldenFiberERP.Infrastructure
-**Location**: `src/Infrastructure/GoldenFiberERP.Infrastructure`
+#### CleanERP.Infrastructure
+**Location**: `src/Infrastructure/CleanERP.Infrastructure`
 
 ```
-GoldenFiberERP.Infrastructure/
-├── GoldenFiberERP.Infrastructure.csproj
+CleanERP.Infrastructure/
+├── CleanERP.Infrastructure.csproj
 ├── DependencyInjection.cs     # Service registration
 ├── README.md                  # Infrastructure documentation
 ├── Extensions/                # Extension methods and utilities
@@ -48,12 +48,12 @@ GoldenFiberERP.Infrastructure/
     └── (planned implementations)
 ```
 
-#### GoldenFiberERP.Persistence
-**Location**: `src/Infrastructure/GoldenFiberERP.Persistence`
+#### CleanERP.Persistence
+**Location**: `src/Infrastructure/CleanERP.Persistence`
 
 ```
-GoldenFiberERP.Persistence/
-├── GoldenFiberERP.Persistence.csproj
+CleanERP.Persistence/
+├── CleanERP.Persistence.csproj
 ├── DependencyInjection.cs     # Persistence service registration
 ├── README.md                  # Persistence layer documentation
 ├── Configurations/            # Entity configurations for EF Core
@@ -911,8 +911,8 @@ public class StripePaymentService : IPaymentService
 
 ### Project References
 ```xml
-<ProjectReference Include="..\Core\GoldenFiberERP.Application\GoldenFiberERP.Application.csproj" />
-<ProjectReference Include="..\Core\GoldenFiberERP.Domain\GoldenFiberERP.Domain.csproj" />
+<ProjectReference Include="..\Core\CleanERP.Application\CleanERP.Application.csproj" />
+<ProjectReference Include="..\Core\CleanERP.Domain\CleanERP.Domain.csproj" />
 ```
 
 The Infrastructure layer provides all the technical implementations needed to support the business logic defined in the Application and Domain layers, while maintaining proper separation of concerns and dependency inversion principles.
@@ -961,7 +961,7 @@ public static IServiceCollection AddPostgreSqlDatabase(this IServiceCollection s
 // appsettings.json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=GoldenFiberERP;Username=postgres;Password=your_password;Include Error Detail=true;",
+    "DefaultConnection": "Host=localhost;Database=CleanERP;Username=postgres;Password=your_password;Include Error Detail=true;",
     "Redis": "localhost:6379"
   },
   "Database": {

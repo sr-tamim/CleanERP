@@ -27,13 +27,13 @@ The Application layer orchestrates the domain objects to perform specific use ca
 ## Current Implementation
 
 ### Project Structure
-**Location**: `src/Core/GoldenFiberERP.Application`
+**Location**: `src/Core/CleanERP.Application`
 
 **Current Status**: Implemented with CQRS pattern and feature-based organization
 **Actual Structure**:
 ```
-GoldenFiberERP.Application/
-├── GoldenFiberERP.Application.csproj
+CleanERP.Application/
+├── CleanERP.Application.csproj
 ├── DependencyInjection.cs     # Service registration
 ├── README.md                  # Application documentation
 ├── Common/                    # Common application concerns
@@ -565,7 +565,7 @@ public interface IUnitOfWork
 
 ### Project References
 ```xml
-<ProjectReference Include="..\GoldenFiberERP.Domain\GoldenFiberERP.Domain.csproj" />
+<ProjectReference Include="..\CleanERP.Domain\CleanERP.Domain.csproj" />
 ```
 
 ## Benefits of This Architecture

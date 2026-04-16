@@ -2,7 +2,7 @@
 
 ## Overview
 
-GoldenFiberERP now implements true module-wise Swagger documentation following Clean Architecture principles. Each business module appears as a separate selectable definition/page in Swagger UI, showing only its own APIs.
+CleanERP now implements true module-wise Swagger documentation following Clean Architecture principles. Each business module appears as a separate selectable definition/page in Swagger UI, showing only its own APIs.
 
 ## Implementation Details
 
@@ -57,7 +57,7 @@ Controllers are automatically assigned to modules based on naming conventions:
 ## Clean Architecture Compliance
 
 ### ✅ Presentation Layer Only
-All Swagger configuration resides in the Presentation layer (`GoldenFiberERP.API`):
+All Swagger configuration resides in the Presentation layer (`CleanERP.API`):
 - `Extensions/SwaggerExtensions.cs` - Main configuration
 - `Extensions/SwaggerOperationFilter.cs` - Operation enhancement
 - `wwwroot/swagger-custom.css` - Styling

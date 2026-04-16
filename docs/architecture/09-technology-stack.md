@@ -2,7 +2,7 @@
 
 ## Overview
 
-The GoldenFiberERP system is built using modern, enterprise-grade technologies that provide scalability, maintainability, and high performance. This document outlines all the technologies, frameworks, and tools used in the system.
+The CleanERP system is built using modern, enterprise-grade technologies that provide scalability, maintainability, and high performance. This document outlines all the technologies, frameworks, and tools used in the system.
 
 ## Core Technologies
 

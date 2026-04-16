@@ -2,7 +2,7 @@
 
 ## Overview
 
-The GoldenFiberERP system implements several well-established design patterns to ensure maintainability, testability, and scalability. This document outlines the key patterns used throughout the application and their implementation details.
+The CleanERP system implements several well-established design patterns to ensure maintainability, testability, and scalability. This document outlines the key patterns used throughout the application and their implementation details.
 
 ## Architectural Patterns
 

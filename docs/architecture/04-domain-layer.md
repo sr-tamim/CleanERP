@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Domain layer represents the core business logic of the GoldenFiberERP system. It contains the business entities, domain services, value objects, and business rules that are independent of any external concerns such as databases, frameworks, or user interfaces.
+The Domain layer represents the core business logic of the CleanERP system. It contains the business entities, domain services, value objects, and business rules that are independent of any external concerns such as databases, frameworks, or user interfaces.
 
 ## Design Principles
 
@@ -212,10 +212,10 @@ public class Country : AuditableEntity
 **File**: `Events/Settings/CountryEvents.cs`
 
 ```csharp
-using GoldenFiberERP.Domain.Events.Common;
-using GoldenFiberERP.Domain.Entities.Settings;
+using CleanERP.Domain.Events.Common;
+using CleanERP.Domain.Entities.Settings;
 
-namespace GoldenFiberERP.Domain.Events.Settings;
+namespace CleanERP.Domain.Events.Settings;
 
 public record CountryCreatedEvent(Country Country) : IDomainEvent;
 public record CountryUpdatedEvent(Country Country) : IDomainEvent;
@@ -307,9 +307,9 @@ public interface IBaseRepository<T> where T : BaseEntity
 **File**: `Interfaces/Repositories/Settings/ICountryRepository.cs`
 
 ```csharp
-using GoldenFiberERP.Domain.Entities.Settings;
+using CleanERP.Domain.Entities.Settings;
 
-namespace GoldenFiberERP.Domain.Interfaces.Repositories.Settings;
+namespace CleanERP.Domain.Interfaces.Repositories.Settings;
 
 public interface ICountryRepository
 {
@@ -343,7 +343,7 @@ Domain Services contain business logic that doesn't naturally fit within a singl
 **File**: `Services/Inventory/IStockManagementService.cs`
 
 ```csharp
-namespace GoldenFiberERP.Domain.Services.Inventory;
+namespace CleanERP.Domain.Services.Inventory;
 
 public interface IStockManagementService
 {
@@ -366,7 +366,7 @@ public interface IStockManagementService
 **File**: `Services/Pricing/IPricingService.cs`
 
 ```csharp
-namespace GoldenFiberERP.Domain.Services.Pricing;
+namespace CleanERP.Domain.Services.Pricing;
 
 public interface IPricingService
 {
@@ -591,4 +591,4 @@ public class Product : AuditableEntity
 - Immutable design
 - Equality implementation
 
-The Domain layer serves as the foundation of the GoldenFiberERP system, providing a rich, expressive model of the business domain that remains stable as external technologies and frameworks evolve.
+The Domain layer serves as the foundation of the CleanERP system, providing a rich, expressive model of the business domain that remains stable as external technologies and frameworks evolve.

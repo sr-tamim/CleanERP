@@ -2,7 +2,7 @@
 
 ## Introduction
 
-GoldenFiberERP is an Enterprise Resource Planning (ERP) system designed to manage and integrate core business processes for manufacturing and distribution companies, with a specific focus on fiber and textile industries.
+CleanERP is an Enterprise Resource Planning (ERP) system designed to manage and integrate core business processes for manufacturing and distribution companies, with a specific focus on fiber and textile industries.
 
 ## System Objectives
 

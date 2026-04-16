@@ -1,6 +1,6 @@
 services:
-  goldenfibererp.api:
-    image: ${DOCKER_REGISTRY-}goldenfibererpapi
+  cleanerp.api:
+    image: ${DOCKER_REGISTRY-}cleanerpapi
     build:
       context: .
-      dockerfile: src/Presentation/GoldenFiberERP.API/Dockerfile
+      dockerfile: src/Presentation/CleanERP.API/Dockerfile

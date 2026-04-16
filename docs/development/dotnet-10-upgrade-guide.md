@@ -1,8 +1,8 @@
-# GoldenFiberERP .NET 8 to .NET 10 Upgrade Guide
+# CleanERP .NET 8 to .NET 10 Upgrade Guide
 
 ## Purpose
 
-This document provides a practical, repo-specific guide for upgrading the full GoldenFiberERP solution from `.NET 8` to `.NET 10` using the `dotnet` CLI as the primary workflow.
+This document provides a practical, repo-specific guide for upgrading the full CleanERP solution from `.NET 8` to `.NET 10` using the `dotnet` CLI as the primary workflow.
 
 The solution can be upgraded directly from `.NET 8` to `.NET 10`. You do not need to migrate to `.NET 9` first. However, because this skips one release, validation should include both `.NET 9` and `.NET 10` compatibility and breaking changes review.
 
@@ -23,7 +23,7 @@ Visual Studio can still be used for editing and debugging, but the upgrade itsel
 
 At the time of writing, this repository contains:
 
-- `1` solution file: `GoldenFiberERP.sln`
+- `1` solution file: `CleanERP.sln`
 - `7` SDK-style projects targeting `net8.0`
 - API containerization via Docker
 - ASP.NET Core API project using `Microsoft.NET.Sdk.Web`
@@ -32,18 +32,18 @@ At the time of writing, this repository contains:
 
 ### Projects That Must Be Retargeted
 
-- `src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj`
-- `src/Core/GoldenFiberERP.Application/GoldenFiberERP.Application.csproj`
-- `src/Core/GoldenFiberERP.Domain/GoldenFiberERP.Domain.csproj`
-- `src/Core/GoldenFiberERP.Shared/GoldenFiberERP.Shared.csproj`
-- `src/Infrastructure/GoldenFiberERP.Infrastructure/GoldenFiberERP.Infrastructure.csproj`
-- `src/Infrastructure/GoldenFiberERP.Persistence/GoldenFiberERP.Persistence.csproj`
-- `src/CompositionRoot/GoldenFiberERP.CompositionRoot/GoldenFiberERP.CompositionRoot.csproj`
+- `src/Presentation/CleanERP.API/CleanERP.API.csproj`
+- `src/Core/CleanERP.Application/CleanERP.Application.csproj`
+- `src/Core/CleanERP.Domain/CleanERP.Domain.csproj`
+- `src/Core/CleanERP.Shared/CleanERP.Shared.csproj`
+- `src/Infrastructure/CleanERP.Infrastructure/CleanERP.Infrastructure.csproj`
+- `src/Infrastructure/CleanERP.Persistence/CleanERP.Persistence.csproj`
+- `src/CompositionRoot/CleanERP.CompositionRoot/CleanERP.CompositionRoot.csproj`
 
 ### Container Files That Must Be Updated
 
-- `src/Presentation/GoldenFiberERP.API/Dockerfile`
-- `src/Presentation/GoldenFiberERP.API/Dockerfile.original`
+- `src/Presentation/CleanERP.API/Dockerfile`
+- `src/Presentation/CleanERP.API/Dockerfile.original`
 
 ## Before You Start
 
@@ -79,9 +79,9 @@ git status --short
 Before touching anything, confirm the current branch state:
 
 ```bash
-dotnet restore GoldenFiberERP.sln
-dotnet build GoldenFiberERP.sln
-dotnet test GoldenFiberERP.sln
+dotnet restore CleanERP.sln
+dotnet build CleanERP.sln
+dotnet test CleanERP.sln
 ```
 
 If the current `.NET 8` baseline is already failing, fix that first. Otherwise you will mix old failures with upgrade regressions.
@@ -106,9 +106,9 @@ This keeps framework-targeting changes separate from package changes and makes f
 Use these commands before editing:
 
 ```bash
-dotnet sln GoldenFiberERP.sln list
-dotnet list GoldenFiberERP.sln package
-dotnet list GoldenFiberERP.sln package --outdated
+dotnet sln CleanERP.sln list
+dotnet list CleanERP.sln package
+dotnet list CleanERP.sln package --outdated
 ```
 
 Optional detailed inspection:
@@ -134,21 +134,21 @@ to:
 
 ### Affected Files
 
-- `src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj`
-- `src/Core/GoldenFiberERP.Application/GoldenFiberERP.Application.csproj`
-- `src/Core/GoldenFiberERP.Domain/GoldenFiberERP.Domain.csproj`
-- `src/Core/GoldenFiberERP.Shared/GoldenFiberERP.Shared.csproj`
-- `src/Infrastructure/GoldenFiberERP.Infrastructure/GoldenFiberERP.Infrastructure.csproj`
-- `src/Infrastructure/GoldenFiberERP.Persistence/GoldenFiberERP.Persistence.csproj`
-- `src/CompositionRoot/GoldenFiberERP.CompositionRoot/GoldenFiberERP.CompositionRoot.csproj`
+- `src/Presentation/CleanERP.API/CleanERP.API.csproj`
+- `src/Core/CleanERP.Application/CleanERP.Application.csproj`
+- `src/Core/CleanERP.Domain/CleanERP.Domain.csproj`
+- `src/Core/CleanERP.Shared/CleanERP.Shared.csproj`
+- `src/Infrastructure/CleanERP.Infrastructure/CleanERP.Infrastructure.csproj`
+- `src/Infrastructure/CleanERP.Persistence/CleanERP.Persistence.csproj`
+- `src/CompositionRoot/CleanERP.CompositionRoot/CleanERP.CompositionRoot.csproj`
 
 ### Validation After Retargeting
 
 Run:
 
 ```bash
-dotnet restore GoldenFiberERP.sln
-dotnet build GoldenFiberERP.sln
+dotnet restore CleanERP.sln
+dotnet build CleanERP.sln
 ```
 
 Do not move on if the target framework change alone causes obvious compile failures.
@@ -177,7 +177,7 @@ In general, keep these on matching major versions:
 
 File:
 
-- `src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj`
+- `src/Presentation/CleanERP.API/CleanERP.API.csproj`
 
 Current notable packages:
 
@@ -188,7 +188,7 @@ Current notable packages:
 
 File:
 
-- `src/Infrastructure/GoldenFiberERP.Persistence/GoldenFiberERP.Persistence.csproj`
+- `src/Infrastructure/CleanERP.Persistence/CleanERP.Persistence.csproj`
 
 Current state:
 
@@ -202,7 +202,7 @@ These should be aligned with the `.NET 10` move to avoid cross-generation mismat
 
 File:
 
-- `src/Infrastructure/GoldenFiberERP.Infrastructure/GoldenFiberERP.Infrastructure.csproj`
+- `src/Infrastructure/CleanERP.Infrastructure/CleanERP.Infrastructure.csproj`
 
 Current state includes:
 
@@ -225,14 +225,14 @@ This matters because carrying old compatibility packages during a framework upgr
 ### CLI Commands to Review Package State
 
 ```bash
-dotnet list GoldenFiberERP.sln package
-dotnet list GoldenFiberERP.sln package --outdated
+dotnet list CleanERP.sln package
+dotnet list CleanERP.sln package --outdated
 ```
 
 If you want to update a specific package from the CLI, the common pattern is:
 
 ```bash
-dotnet add src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj package Microsoft.AspNetCore.Authentication.JwtBearer --version 10.*
+dotnet add src/Presentation/CleanERP.API/CleanERP.API.csproj package Microsoft.AspNetCore.Authentication.JwtBearer --version 10.*
 ```
 
 Repeat for each explicitly referenced package that should move to the `10.x` train.
@@ -252,8 +252,8 @@ This solution uses `.NET 8` container images today. Those must be updated along 
 
 ### Files
 
-- `src/Presentation/GoldenFiberERP.API/Dockerfile`
-- `src/Presentation/GoldenFiberERP.API/Dockerfile.original`
+- `src/Presentation/CleanERP.API/Dockerfile`
+- `src/Presentation/CleanERP.API/Dockerfile.original`
 
 ### Required Changes
 
@@ -294,7 +294,7 @@ dotnet ef --version
 Then validate migrations and design-time services:
 
 ```bash
-dotnet ef dbcontext info --project src/Infrastructure/GoldenFiberERP.Persistence/GoldenFiberERP.Persistence.csproj --startup-project src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj
+dotnet ef dbcontext info --project src/Infrastructure/CleanERP.Persistence/CleanERP.Persistence.csproj --startup-project src/Presentation/CleanERP.API/CleanERP.API.csproj
 ```
 
 If this fails, resolve that before generating or applying any new migrations.
@@ -304,22 +304,22 @@ If this fails, resolve that before generating or applying any new migrations.
 ### Core Validation Commands
 
 ```bash
-dotnet clean GoldenFiberERP.sln
-dotnet restore GoldenFiberERP.sln
-dotnet build GoldenFiberERP.sln
-dotnet test GoldenFiberERP.sln
+dotnet clean CleanERP.sln
+dotnet restore CleanERP.sln
+dotnet build CleanERP.sln
+dotnet test CleanERP.sln
 ```
 
 If you want stricter output during upgrade verification:
 
 ```bash
-dotnet build GoldenFiberERP.sln -warnaserror
+dotnet build CleanERP.sln -warnaserror
 ```
 
 ### API Run Validation
 
 ```bash
-dotnet run --project src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj
+dotnet run --project src/Presentation/CleanERP.API/CleanERP.API.csproj
 ```
 
 Check at minimum:
@@ -421,29 +421,29 @@ git checkout -b chore/upgrade-dotnet-10
 dotnet --list-sdks
 dotnet --version
 
-dotnet restore GoldenFiberERP.sln
-dotnet build GoldenFiberERP.sln
-dotnet test GoldenFiberERP.sln
+dotnet restore CleanERP.sln
+dotnet build CleanERP.sln
+dotnet test CleanERP.sln
 
-dotnet sln GoldenFiberERP.sln list
-dotnet list GoldenFiberERP.sln package
-dotnet list GoldenFiberERP.sln package --outdated
+dotnet sln CleanERP.sln list
+dotnet list CleanERP.sln package
+dotnet list CleanERP.sln package --outdated
 
 # edit all TargetFramework values to net10.0
 # align framework-coupled package versions to 10.x
 # remove obsolete compatibility packages where appropriate
 # update Dockerfiles from 8.0 images to 10.0
 
-dotnet clean GoldenFiberERP.sln
-dotnet restore GoldenFiberERP.sln
-dotnet build GoldenFiberERP.sln
-dotnet test GoldenFiberERP.sln
+dotnet clean CleanERP.sln
+dotnet restore CleanERP.sln
+dotnet build CleanERP.sln
+dotnet test CleanERP.sln
 
 dotnet tool update --global dotnet-ef
 dotnet ef --version
-dotnet ef dbcontext info --project src/Infrastructure/GoldenFiberERP.Persistence/GoldenFiberERP.Persistence.csproj --startup-project src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj
+dotnet ef dbcontext info --project src/Infrastructure/CleanERP.Persistence/CleanERP.Persistence.csproj --startup-project src/Presentation/CleanERP.API/CleanERP.API.csproj
 
-dotnet run --project src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj
+dotnet run --project src/Presentation/CleanERP.API/CleanERP.API.csproj
 docker compose build
 docker compose up
 ```

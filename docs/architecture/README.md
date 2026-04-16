@@ -1,6 +1,6 @@
-# GoldenFiberERP - Architecture Documentation
+# CleanERP - Architecture Documentation
 
-This folder contains comprehensive architecture documentation for the GoldenFiberERP system.
+This folder contains comprehensive architecture documentation for the CleanERP system.
 
 ## Documentation Overview
 
@@ -22,7 +22,7 @@ This folder contains comprehensive architecture documentation for the GoldenFibe
 
 ## Architecture Principles
 
-The GoldenFiberERP system follows Clean Architecture principles with clear separation of concerns:
+The CleanERP system follows Clean Architecture principles with clear separation of concerns:
 
 1. **Dependency Inversion** - Dependencies point inward toward the domain
 2. **Single Responsibility** - Each layer has a specific responsibility

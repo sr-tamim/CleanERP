@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CleanERP.API.Extensions;
@@ -26,17 +26,14 @@ public class SwaggerOperationFilter : IOperationFilter
             }
 
             // Add module information to tags if not already present
-            operation.Tags ??= new List<OpenApiTag>();
+            operation.Tags ??= new HashSet<OpenApiTagReference>();
 
             // Ensure the module tag is present
-            var moduleTag = new OpenApiTag
-            {
-                Name = $"{moduleInfo} Module"
-            };
+            var moduleTag = new OpenApiTagReference($"{moduleInfo} Module", null);
 
             if (operation.Tags.Count == 0 && !operation.Tags.Any(t => t.Name == moduleTag.Name))
             {
-                operation.Tags.Insert(0, moduleTag);
+                operation.Tags.Add(moduleTag);
             }
         }
 
@@ -77,7 +74,7 @@ public class SwaggerOperationFilter : IOperationFilter
 
         // Add 401 Unauthorized for non-public endpoints
         if (!operation.Responses.ContainsKey("401") &&
-            !operation.Tags?.Any(t => t.Name.Contains("Health", StringComparison.OrdinalIgnoreCase)) == true)
+            !operation.Tags?.Any(t => t.Name?.Contains("Health", StringComparison.OrdinalIgnoreCase) == true) == true)
         {
             operation.Responses.Add("401", new OpenApiResponse
             {

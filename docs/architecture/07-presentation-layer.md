@@ -851,15 +851,15 @@ public static class SwaggerConfiguration
 
 ### NuGet Packages
 ```xml
-<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
-<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-<PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
-<PackageReference Include="MediatR" Version="12.1.1" />
-<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-<PackageReference Include="Microsoft.AspNetCore.RateLimiting" Version="8.0.0" />
+<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="current-version" />
+<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="current-version" />
+<PackageReference Include="Swashbuckle.AspNetCore" Version="current-version" />
+<PackageReference Include="FluentValidation.AspNetCore" Version="current-version" />
+<PackageReference Include="Serilog.AspNetCore" Version="current-version" />
+<PackageReference Include="MediatR" Version="current-version" />
+<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="current-version" />
+<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="current-version" />
+<PackageReference Include="Microsoft.AspNetCore.RateLimiting" Version="current-version" />
 ```
 
 ### Project References

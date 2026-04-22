@@ -554,13 +554,13 @@ public interface IUnitOfWork
 
 ### Required NuGet Packages
 ```xml
-<PackageReference Include="MediatR" Version="12.1.1" />
-<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
-<PackageReference Include="FluentValidation" Version="11.8.0" />
-<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.0" />
-<PackageReference Include="AutoMapper" Version="12.0.1" />
-<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+<PackageReference Include="MediatR" Version="current-version" />
+<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="current-version" />
+<PackageReference Include="FluentValidation" Version="current-version" />
+<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="current-version" />
+<PackageReference Include="AutoMapper" Version="current-version" />
+<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="current-version" />
+<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="current-version" />
 ```
 
 ### Project References

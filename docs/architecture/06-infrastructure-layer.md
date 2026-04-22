@@ -897,16 +897,16 @@ public class StripePaymentService : IPaymentService
 
 ### NuGet Packages
 ```xml
-<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
-<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
-<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.0" />
-<PackageReference Include="MailKit" Version="4.3.0" />
-<PackageReference Include="AutoMapper" Version="12.0.1" />
-<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-<PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="current-version" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="current-version" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="current-version" />
+<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="current-version" />
+<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="current-version" />
+<PackageReference Include="MailKit" Version="current-version" />
+<PackageReference Include="AutoMapper" Version="current-version" />
+<PackageReference Include="Serilog.Extensions.Hosting" Version="current-version" />
+<PackageReference Include="Serilog.Sinks.File" Version="current-version" />
+<PackageReference Include="Serilog.Sinks.Console" Version="current-version" />
 ```
 
 ### Project References

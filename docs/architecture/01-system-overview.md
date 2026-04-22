@@ -68,7 +68,7 @@ The system follows **Clean Architecture** principles with a layered approach:
 
 ## Technology Foundation
 
-- **.NET 8**: Modern, cross-platform framework
+- **.NET**: Modern, cross-platform framework
 - **ASP.NET Core**: Web API development
 - **Entity Framework Core**: Object-relational mapping (planned)
 - **Docker**: Containerization and deployment

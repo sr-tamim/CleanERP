@@ -6,9 +6,9 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 ## Core Technologies
 
-### .NET 8
+### .NET
 **Purpose**: Primary development platform
-**Version**: 8.0 (LTS)
+**Version Strategy**: Current LTS release
 **Benefits**:
 - Latest long-term support version
 - Cross-platform compatibility (Windows, Linux, macOS)
@@ -25,7 +25,7 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 - Primary constructors for cleaner code
 - Collection expressions for better syntax
 
-### ASP.NET Core 8
+### ASP.NET Core
 **Purpose**: Web API framework
 **Features**:
 - Built-in dependency injection
@@ -36,9 +36,9 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 ## Data Access Layer
 
-### Entity Framework Core 9
+### Entity Framework Core
 **Purpose**: Object-Relational Mapping (ORM)
-**Version**: 9.0.6
+**Version Strategy**: Keep aligned with the current target framework/provider combination
 **Features**:
 - Code-first approach with migrations
 - LINQ query support
@@ -48,9 +48,9 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 **Configuration Example**:
 ```xml
-<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6" />
-<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+<PackageReference Include="Microsoft.EntityFrameworkCore" Version="current-version" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="current-version" />
+<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="current-version" />
 ```
 
 ### PostgreSQL
@@ -74,7 +74,7 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 ### MediatR
 **Purpose**: Mediator pattern implementation for CQRS
-**Version**: 13.0.0
+**Version Strategy**: Keep aligned with the actively supported project version
 **Benefits**:
 - Decoupled request/response handling
 - Pipeline behaviors for cross-cutting concerns
@@ -83,12 +83,12 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 **Configuration**:
 ```xml
-<PackageReference Include="MediatR" Version="13.0.0" />
+<PackageReference Include="MediatR" Version="current-version" />
 ```
 
 ### AutoMapper
 **Purpose**: Object-to-object mapping
-**Version**: 15.0.0
+**Version Strategy**: Use the latest compatible project version
 **Benefits**:
 - Automatic property mapping
 - Custom mapping configurations
@@ -97,13 +97,13 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 **Configuration**:
 ```xml
-<PackageReference Include="AutoMapper" Version="15.0.0" />
-<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+<PackageReference Include="AutoMapper" Version="current-version" />
+<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="current-version" />
 ```
 
 ### FluentValidation
 **Purpose**: Input validation
-**Version**: 12.0.0
+**Version Strategy**: Use the latest compatible project version
 **Benefits**:
 - Fluent interface for validation rules
 - Separation of validation from business logic
@@ -112,14 +112,14 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 **Configuration**:
 ```xml
-<PackageReference Include="FluentValidation" Version="12.0.0" />
-<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
+<PackageReference Include="FluentValidation" Version="current-version" />
+<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="current-version" />
+<PackageReference Include="FluentValidation.AspNetCore" Version="current-version" />
 ```
 
 ### Swagger/OpenAPI
 **Purpose**: API documentation and testing
-**Version**: 9.0.1
+**Version Strategy**: Use the latest compatible project version
 **Benefits**:
 - Automatic API documentation generation
 - Interactive API testing interface
@@ -128,14 +128,14 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 **Configuration**:
 ```xml
-<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.1" />
+<PackageReference Include="Swashbuckle.AspNetCore" Version="current-version" />
 ```
 
 ## Authentication & Authorization
 
 ### JWT (JSON Web Tokens)
 **Purpose**: Stateless authentication
-**Version**: 8.0.17
+**Version Strategy**: Keep aligned with the current ASP.NET Core version
 **Benefits**:
 - Stateless authentication
 - Cross-platform compatibility
@@ -144,14 +144,14 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 **Configuration**:
 ```xml
-<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.17" />
+<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="current-version" />
 ```
 
 ## Database Connectivity
 
 ### Npgsql
 **Purpose**: PostgreSQL data provider for .NET
-**Version**: 9.0.3
+**Version Strategy**: Keep aligned with the EF Core/provider compatibility matrix
 **Benefits**:
 - High-performance PostgreSQL connectivity
 - Full PostgreSQL feature support
@@ -160,8 +160,8 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 **Configuration**:
 ```xml
-<PackageReference Include="Npgsql" Version="9.0.3" />
-<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+<PackageReference Include="Npgsql" Version="current-version" />
+<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="current-version" />
 ```
 <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
@@ -220,12 +220,12 @@ The CleanERP system is built using modern, enterprise-grade technologies that pr
 
 **Testing Configuration**:
 ```xml
-<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+<PackageReference Include="Microsoft.NET.Test.Sdk" Version="current-version" />
 <PackageReference Include="xunit" Version="2.6.1" />
 <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
 <PackageReference Include="Moq" Version="4.20.69" />
 <PackageReference Include="FluentAssertions" Version="6.12.0" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="current-version" />
 ```
 
 ## Containerization

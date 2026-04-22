@@ -122,7 +122,7 @@ volumes:
 #### Multi-Stage Dockerfile
 ```dockerfile
 # Build stage
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:current-sdk AS build
 WORKDIR /src
 
 # Copy and restore projects
@@ -143,7 +143,7 @@ FROM build AS publish
 RUN dotnet publish "CleanERP.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:current-runtime AS runtime
 WORKDIR /app
 
 # Create non-root user
@@ -491,7 +491,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '<current-sdk-version>'
     
     - name: Restore dependencies
       run: dotnet restore

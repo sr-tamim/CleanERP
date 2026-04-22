@@ -128,7 +128,7 @@ var filter = new FilterRequest
 
 ## Dependencies
 
-- **No external dependencies** - Pure .NET 8 library
+- **No external dependencies** - Pure .NET library
 - **No references to other project layers** - Maintains clean architecture
 
 ## Notes

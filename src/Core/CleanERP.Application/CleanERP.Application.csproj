@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CleanERP.Domain\CleanERP.Domain.csproj" />
+    <ProjectReference Include="..\CleanERP.Shared\CleanERP.Shared.csproj" />
   </ItemGroup>
 
 </Project>

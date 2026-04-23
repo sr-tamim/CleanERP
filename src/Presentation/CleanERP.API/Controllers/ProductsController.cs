@@ -4,7 +4,8 @@ using MediatR;
 using CleanERP.Application.Features.Inventory.Commands;
 using CleanERP.Application.Features.Inventory.Queries;
 using CleanERP.Application.Features.Inventory.DTOs;
-using CleanERP.API.Authorization;
+using CleanERP.API.Attributes;
+using CleanERP.Shared.Constants;
 
 namespace CleanERP.API.Controllers;
 
@@ -28,7 +29,7 @@ public class ProductsController : ControllerBase
     /// Get all products
     /// </summary>
     [HttpGet]
-    [RequirePermission(Permissions.ProductRead)]
+    [RequirePermission(ApplicationConstants.Permissions.CanViewProducts)]
     public async Task<IActionResult> GetProducts()
     {
         var query = new GetProductsQuery();

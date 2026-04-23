@@ -5,8 +5,8 @@ using CleanERP.Application.Common.Interfaces;
 using CleanERP.Infrastructure.Services;
 using CleanERP.Infrastructure.Services.Domain;
 using CleanERP.Infrastructure.Services.Authentication;
-using CleanERP.Infrastructure.Persistence.Repositories.Settings;
-using CleanERP.Infrastructure.Persistence.Repositories.Identity;
+using CleanERP.Persistence.Repositories.Settings;
+using CleanERP.Persistence.Repositories.Identity;
 using CleanERP.Domain.Services.Inventory;
 using CleanERP.Domain.Services.Pricing;
 using CleanERP.Domain.Interfaces.Repositories.Settings;
@@ -39,9 +39,6 @@ public static class DependencyInjection
         services.AddTransient<IRoleRepository, RoleRepository>();
         services.AddTransient<IPermissionRepository, PermissionRepository>();
         services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
-        services.AddTransient<IUserRoleRepository, UserRoleRepository>();
-        services.AddTransient<IUserPermissionRepository, UserPermissionRepository>();
-        services.AddTransient<IRolePermissionRepository, RolePermissionRepository>();
 
         // Register authentication services
         services.AddTransient<IJwtTokenService, JwtTokenService>();

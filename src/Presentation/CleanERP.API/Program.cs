@@ -4,7 +4,7 @@ using CleanERP.Persistence.Seeders;
 using CleanERP.API.Middleware;
 using CleanERP.API.Extensions;
 using CleanERP.API.Filters;
-using CleanERP.API.Configuration;
+using CleanERP.Shared.Configuration;
 using CleanERP.API.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

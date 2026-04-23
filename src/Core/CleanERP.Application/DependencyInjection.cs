@@ -12,11 +12,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         // Register AutoMapper — scan all profiles in this assembly
-        var mapperConfig = new MapperConfiguration(cfg =>
-        {
-            cfg.AddMaps(Assembly.GetExecutingAssembly());
-        });
-        services.AddSingleton(mapperConfig.CreateMapper());
+        services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
         
         // Register FluentValidation
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

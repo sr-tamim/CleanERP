@@ -154,7 +154,7 @@ public class AuthenticationService : IAuthenticationService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during authentication for user: {UsernameOrEmail}", usernameOrEmail);
-            return Result<AuthenticationResult>.Failure("Authentication error occurred");
+            return Result<AuthenticationResult>.Failure("Authentication error occurred: " + ex.Message);
         }
     }
 

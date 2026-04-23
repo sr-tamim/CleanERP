@@ -10,7 +10,7 @@ public class RequirePermissionAttribute : AuthorizeAttribute
 {
     public string Permission { get; }
     
-    public RequirePermissionAttribute(string permission) : base("Permission")
+    public RequirePermissionAttribute(string permission) : base($"Permission:{permission}")
     {
         Permission = permission;
     }
@@ -26,7 +26,8 @@ public class RequireModuleAccessAttribute : AuthorizeAttribute
     public string Action { get; }
     public string? Resource { get; }
     
-    public RequireModuleAccessAttribute(string module, string action, string? resource = null) : base("ModuleAccess")
+    public RequireModuleAccessAttribute(string module, string action, string? resource = null)
+        : base(resource != null ? $"ModuleAction:{module}:{action}:{resource}" : $"ModuleAction:{module}:{action}")
     {
         Module = module;
         Action = action;

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using CleanERP.Application.Common.Interfaces;
 using CleanERP.Domain.Entities.Inventory;
 using CleanERP.Domain.Entities.Settings;
+using CleanERP.Domain.Entities.Identity;
 using CleanERP.Domain.Entities.Common;
 using CleanERP.Persistence.Extensions;
 using System.Reflection;
@@ -29,6 +30,15 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
 
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Country> Countries => Set<Country>();
+
+    // Identity
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
+    public DbSet<UserPermission> UserPermissions => Set<UserPermission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

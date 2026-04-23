@@ -238,7 +238,7 @@
 
 /* Custom footer styling */
 .swagger-ui .info::after {
-    content: "🧵 CleanERP - Textile Industry ERP Solution";
+    content: "🏗️ CleanERP - Clean Architecture Practice Project";
     display: block;
     text-align: center;
     margin-top: 20px;

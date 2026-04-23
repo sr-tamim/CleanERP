@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using MediatR;
 using CleanERP.Application.Features.Inventory.Commands;
 using CleanERP.Application.Features.Inventory.Queries;
@@ -15,7 +14,7 @@ namespace CleanERP.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Tags("Products")]
-[Authorize]
+[RequirePermission(ApplicationConstants.Permissions.CanViewProducts)]
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -45,6 +44,7 @@ public class ProductsController : ControllerBase
     /// Get product by ID
     /// </summary>
     [HttpGet("{id}")]
+    [RequirePermission(ApplicationConstants.Permissions.CanViewProducts)]
     public async Task<IActionResult> GetProduct(int id)
     {
         var query = new GetProductByIdQuery(id);
@@ -60,6 +60,7 @@ public class ProductsController : ControllerBase
     /// Create a new product
     /// </summary>
     [HttpPost]
+    [RequirePermission(ApplicationConstants.Permissions.CanCreateProducts)]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto dto)
     {
         var command = new CreateProductCommand
@@ -83,6 +84,7 @@ public class ProductsController : ControllerBase
     /// Update an existing product
     /// </summary>
     [HttpPut("{id}")]
+    [RequirePermission(ApplicationConstants.Permissions.CanUpdateProducts)]
     public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductDto dto)
     {
         var command = new UpdateProductCommand
@@ -107,6 +109,7 @@ public class ProductsController : ControllerBase
     /// Delete a product
     /// </summary>
     [HttpDelete("{id}")]
+    [RequirePermission(ApplicationConstants.Permissions.CanDeleteProducts)]
     public async Task<IActionResult> DeleteProduct(int id)
     {
         var command = new DeleteProductCommand(id);

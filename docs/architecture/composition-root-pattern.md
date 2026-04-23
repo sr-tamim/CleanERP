@@ -53,10 +53,10 @@ The **Composition Root** is an enterprise design pattern that centralizes all de
 
 ### 1. Main Composition Root
 
-**File**: `GoldenFiberERP.API/CompositionRoot/DependencyInjection.cs`
+**File**: `CleanERP.API/CompositionRoot/DependencyInjection.cs`
 
 ```csharp
-public static IServiceCollection AddGoldenFiberERP(
+public static IServiceCollection AddCleanERP(
     this IServiceCollection services, 
     IConfiguration configuration)
 {
@@ -78,7 +78,7 @@ public static IServiceCollection AddGoldenFiberERP(
 
 ### 2. Business Module Registration
 
-**File**: `GoldenFiberERP.API/CompositionRoot/BusinessModules.cs`
+**File**: `CleanERP.API/CompositionRoot/BusinessModules.cs`
 
 ```csharp
 public static IServiceCollection AddInventoryModule(this IServiceCollection services, IConfiguration config)
@@ -118,7 +118,7 @@ public static IServiceCollection AddInventoryModule(this IServiceCollection serv
 ## Clean Architecture Compliance
 
 ### ✅ **Dependency Inversion Principle**
-- Presentation layer depends on **abstractions** (`AddGoldenFiberERP`)
+- Presentation layer depends on **abstractions** (`AddCleanERP`)
 - Infrastructure details are hidden in composition root
 - No direct coupling between high-level and low-level modules
 
@@ -171,7 +171,7 @@ public static IServiceCollection AddInventoryModule(this IServiceCollection serv
 ```csharp
 // Easy to create test-specific composition
 var services = new ServiceCollection();
-services.AddGoldenFiberERPTestConfiguration();
+services.AddCleanERPTestConfiguration();
 var provider = services.BuildServiceProvider();
 ```
 
@@ -182,7 +182,7 @@ public class TestStartup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddGoldenFiberERP(testConfiguration);
+        services.AddCleanERP(testConfiguration);
     }
 }
 ```
@@ -230,4 +230,4 @@ The Composition Root pattern is the **BEST APPROACH** for enterprise ERP systems
 4. **Enables flexible deployments** across environments
 5. **Industry proven** in large .NET applications
 
-Your GoldenFiberERP implementation demonstrates enterprise-grade architecture that will scale from startup to large organization needs.
+Your CleanERP implementation demonstrates enterprise-grade architecture that will scale from startup to large organization needs.

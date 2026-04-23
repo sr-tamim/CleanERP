@@ -2,21 +2,21 @@
 
 ## Overview
 
-This document provides a step-by-step guide for adding new features or modules to the GoldenFiberERP system following Clean Architecture principles. The system is organized into four main layers: Domain, Application, Infrastructure, and Presentation.
+This document provides a step-by-step guide for adding new features or modules to the CleanERP system following Clean Architecture principles. The system is organized into four main layers: Domain, Application, Infrastructure, and Presentation.
 
 ## Architecture Layers
 
 ```
 📁 src/
 ├── 📁 Core/
-│   ├── 📁 GoldenFiberERP.Domain/          # Business Logic & Entities
-│   ├── 📁 GoldenFiberERP.Application/     # Application Logic & Use Cases
-│   └── 📁 GoldenFiberERP.Shared/          # Shared Utilities
+│   ├── 📁 CleanERP.Domain/          # Business Logic & Entities
+│   ├── 📁 CleanERP.Application/     # Application Logic & Use Cases
+│   └── 📁 CleanERP.Shared/          # Shared Utilities
 ├── 📁 Infrastructure/
-│   ├── 📁 GoldenFiberERP.Infrastructure/  # External Services
-│   └── 📁 GoldenFiberERP.Persistence/     # Database & Repository Implementations
+│   ├── 📁 CleanERP.Infrastructure/  # External Services
+│   └── 📁 CleanERP.Persistence/     # Database & Repository Implementations
 └── 📁 Presentation/
-    └── 📁 GoldenFiberERP.API/             # API Controllers & Configuration
+    └── 📁 CleanERP.API/             # API Controllers & Configuration
 ```
 
 ## Step-by-Step Implementation Guide
@@ -25,15 +25,15 @@ This document provides a step-by-step guide for adding new features or modules t
 
 #### 1.1 Create Domain Entity
 
-**Location:** `src/Core/GoldenFiberERP.Domain/Entities/{ModuleName}/{EntityName}.cs`
+**Location:** `src/Core/CleanERP.Domain/Entities/{ModuleName}/{EntityName}.cs`
 
-**Example:** `src/Core/GoldenFiberERP.Domain/Entities/Settings/Country.cs`
+**Example:** `src/Core/CleanERP.Domain/Entities/Settings/Country.cs`
 
 ```csharp
-using GoldenFiberERP.Domain.Entities.Common;
-using GoldenFiberERP.Domain.Events.Settings;
+using CleanERP.Domain.Entities.Common;
+using CleanERP.Domain.Events.Settings;
 
-namespace GoldenFiberERP.Domain.Entities.Settings;
+namespace CleanERP.Domain.Entities.Settings;
 
 public class Country : AuditableEntity
 {
@@ -89,13 +89,13 @@ public class Country : AuditableEntity
 
 #### 1.2 Create Domain Events
 
-**Location:** `src/Core/GoldenFiberERP.Domain/Events/{ModuleName}/{EntityName}Events.cs`
+**Location:** `src/Core/CleanERP.Domain/Events/{ModuleName}/{EntityName}Events.cs`
 
 ```csharp
-using GoldenFiberERP.Domain.Events.Common;
-using GoldenFiberERP.Domain.Entities.Settings;
+using CleanERP.Domain.Events.Common;
+using CleanERP.Domain.Entities.Settings;
 
-namespace GoldenFiberERP.Domain.Events.Settings;
+namespace CleanERP.Domain.Events.Settings;
 
 public record CountryCreatedEvent(Country Country) : IDomainEvent;
 public record CountryUpdatedEvent(Country Country) : IDomainEvent;
@@ -106,12 +106,12 @@ public record CountryDeactivatedEvent(Country Country) : IDomainEvent;
 
 #### 1.3 Create Repository Interface
 
-**Location:** `src/Core/GoldenFiberERP.Domain/Interfaces/Repositories/{ModuleName}/I{EntityName}Repository.cs`
+**Location:** `src/Core/CleanERP.Domain/Interfaces/Repositories/{ModuleName}/I{EntityName}Repository.cs`
 
 ```csharp
-using GoldenFiberERP.Domain.Entities.Settings;
+using CleanERP.Domain.Entities.Settings;
 
-namespace GoldenFiberERP.Domain.Interfaces.Repositories.Settings;
+namespace CleanERP.Domain.Interfaces.Repositories.Settings;
 
 public interface ICountryRepository
 {
@@ -134,10 +134,10 @@ public interface ICountryRepository
 
 #### 2.1 Create DTOs
 
-**Location:** `src/Core/GoldenFiberERP.Application/Features/{ModuleName}/DTOs/{EntityName}DTOs.cs`
+**Location:** `src/Core/CleanERP.Application/Features/{ModuleName}/DTOs/{EntityName}DTOs.cs`
 
 ```csharp
-namespace GoldenFiberERP.Application.Features.Settings.DTOs;
+namespace CleanERP.Application.Features.Settings.DTOs;
 
 // Response DTOs
 public record CountryDto(
@@ -175,14 +175,14 @@ public record UpdateCountryDto(
 
 #### 2.2 Create Commands and Handlers
 
-**Location:** `src/Core/GoldenFiberERP.Application/Features/{ModuleName}/Commands/`
+**Location:** `src/Core/CleanERP.Application/Features/{ModuleName}/Commands/`
 
 ```csharp
 // CreateCountryCommand.cs
 using MediatR;
-using GoldenFiberERP.Application.Common.Models;
+using CleanERP.Application.Common.Models;
 
-namespace GoldenFiberERP.Application.Features.Settings.Commands;
+namespace CleanERP.Application.Features.Settings.Commands;
 
 public record CreateCountryCommand : IRequest<Result<int>>
 {
@@ -194,12 +194,12 @@ public record CreateCountryCommand : IRequest<Result<int>>
 public class CreateCountryCommandHandler : IRequestHandler<CreateCountryCommand, Result<int>>
 {
     private readonly ICountryRepository _repository;
-    private readonly IApplicationDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateCountryCommandHandler(ICountryRepository repository, IApplicationDbContext context)
+    public CreateCountryCommandHandler(ICountryRepository repository, IUnitOfWork unitOfWork)
     {
         _repository = repository;
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<int>> Handle(CreateCountryCommand request, CancellationToken cancellationToken)
@@ -219,7 +219,7 @@ public class CreateCountryCommandHandler : IRequestHandler<CreateCountryCommand,
 
         // Save to repository
         await _repository.AddAsync(country, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<int>.Success(country.Id);
     }
@@ -228,15 +228,15 @@ public class CreateCountryCommandHandler : IRequestHandler<CreateCountryCommand,
 
 #### 2.3 Create Queries and Handlers
 
-**Location:** `src/Core/GoldenFiberERP.Application/Features/{ModuleName}/Queries/`
+**Location:** `src/Core/CleanERP.Application/Features/{ModuleName}/Queries/`
 
 ```csharp
 // GetCountriesQuery.cs
 using MediatR;
-using GoldenFiberERP.Application.Common.Models;
-using GoldenFiberERP.Application.Features.Settings.DTOs;
+using CleanERP.Application.Common.Models;
+using CleanERP.Application.Features.Settings.DTOs;
 
-namespace GoldenFiberERP.Application.Features.Settings.Queries;
+namespace CleanERP.Application.Features.Settings.Queries;
 
 public record GetCountriesQuery : IRequest<Result<PagedResult<CountryDto>>>
 {
@@ -283,13 +283,13 @@ public class GetCountriesQueryHandler : IRequestHandler<GetCountriesQuery, Resul
 
 #### 2.4 Create Validators
 
-**Location:** `src/Core/GoldenFiberERP.Application/Features/{ModuleName}/Validators/`
+**Location:** `src/Core/CleanERP.Application/Features/{ModuleName}/Validators/`
 
 ```csharp
 using FluentValidation;
-using GoldenFiberERP.Application.Features.Settings.Commands;
+using CleanERP.Application.Features.Settings.Commands;
 
-namespace GoldenFiberERP.Application.Features.Settings.Validators;
+namespace CleanERP.Application.Features.Settings.Validators;
 
 public class CreateCountryCommandValidator : AbstractValidator<CreateCountryCommand>
 {
@@ -311,14 +311,14 @@ public class CreateCountryCommandValidator : AbstractValidator<CreateCountryComm
 
 #### 2.5 Create Mapping Profile
 
-**Location:** `src/Core/GoldenFiberERP.Application/Features/{ModuleName}/Mappers/{EntityName}MappingProfile.cs`
+**Location:** `src/Core/CleanERP.Application/Features/{ModuleName}/Mappers/{EntityName}MappingProfile.cs`
 
 ```csharp
 using AutoMapper;
-using GoldenFiberERP.Domain.Entities.Settings;
-using GoldenFiberERP.Application.Features.Settings.DTOs;
+using CleanERP.Domain.Entities.Settings;
+using CleanERP.Application.Features.Settings.DTOs;
 
-namespace GoldenFiberERP.Application.Features.Settings.Mappers;
+namespace CleanERP.Application.Features.Settings.Mappers;
 
 public class CountryMappingProfile : Profile
 {
@@ -331,33 +331,25 @@ public class CountryMappingProfile : Profile
 }
 ```
 
-#### 2.6 Update Application DbContext Interface
+#### 2.6 Update Persistence DbContext (if needed)
 
-**Location:** `src/Core/GoldenFiberERP.Application/Common/Interfaces/IApplicationDbContext.cs`
+**Location:** `src/Infrastructure/CleanERP.Persistence/Contexts/ApplicationDbContext.cs`
 
-```csharp
-public interface IApplicationDbContext
-{
-    DbSet<Product> Products { get; }
-    DbSet<Country> Countries { get; } // Add new entity
-    
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-}
-```
+Add a new `DbSet<T>` for the entity if the module requires it.
 
 ### 3. Infrastructure Layer Implementation
 
 #### 3.1 Create Repository Implementation
 
-**Location:** `src/Infrastructure/GoldenFiberERP.Infrastructure/Persistence/Repositories/{ModuleName}/{EntityName}Repository.cs`
+**Location:** `src/Infrastructure/CleanERP.Persistence/Repositories/{ModuleName}/{EntityName}Repository.cs`
 
 ```csharp
 using Microsoft.EntityFrameworkCore;
-using GoldenFiberERP.Domain.Entities.Settings;
-using GoldenFiberERP.Domain.Interfaces.Repositories.Settings;
-using GoldenFiberERP.Persistence.Contexts;
+using CleanERP.Domain.Entities.Settings;
+using CleanERP.Domain.Interfaces.Repositories.Settings;
+using CleanERP.Persistence.Contexts;
 
-namespace GoldenFiberERP.Infrastructure.Persistence.Repositories.Settings;
+namespace CleanERP.Persistence.Repositories.Settings;
 
 public class CountryRepository : ICountryRepository
 {
@@ -384,14 +376,14 @@ public class CountryRepository : ICountryRepository
 
 #### 3.2 Create EF Configuration
 
-**Location:** `src/Infrastructure/GoldenFiberERP.Persistence/Configurations/{ModuleName}/{EntityName}Configuration.cs`
+**Location:** `src/Infrastructure/CleanERP.Persistence/Configurations/{ModuleName}/{EntityName}Configuration.cs`
 
 ```csharp
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using GoldenFiberERP.Domain.Entities.Settings;
+using CleanERP.Domain.Entities.Settings;
 
-namespace GoldenFiberERP.Persistence.Configurations.Settings;
+namespace CleanERP.Persistence.Configurations.Settings;
 
 public class CountryConfiguration : IEntityTypeConfiguration<Country>
 {
@@ -421,10 +413,10 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
 
 #### 3.3 Update Application DbContext
 
-**Location:** `src/Infrastructure/GoldenFiberERP.Persistence/Contexts/ApplicationDbContext.cs`
+**Location:** `src/Infrastructure/CleanERP.Persistence/Contexts/ApplicationDbContext.cs`
 
 ```csharp
-public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWork
+public class ApplicationDbContext : DbContext, IUnitOfWork
 {
     // ... existing code ...
 
@@ -437,15 +429,15 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWor
 
 #### 3.4 Register Repository in DI
 
-**Location:** `src/Infrastructure/GoldenFiberERP.Infrastructure/DependencyInjection.cs`
+**Location:** `src/Infrastructure/CleanERP.Persistence/DependencyInjection.cs`
 
 ```csharp
-public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
 {
     // ... existing registrations ...
 
     // Register repositories
-    services.AddTransient<ICountryRepository, CountryRepository>(); // Add new repository
+    services.AddScoped<ICountryRepository, CountryRepository>(); // Add new repository
 
     // ... rest of the registrations ...
 }
@@ -455,16 +447,16 @@ public static IServiceCollection AddInfrastructure(this IServiceCollection servi
 
 #### 4.1 Create API Controller
 
-**Location:** `src/Presentation/GoldenFiberERP.API/Controllers/{ModuleName}/{EntityName}Controller.cs`
+**Location:** `src/Presentation/CleanERP.API/Controllers/{ModuleName}/{EntityName}Controller.cs`
 
 ```csharp
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using GoldenFiberERP.Application.Features.Settings.Commands;
-using GoldenFiberERP.Application.Features.Settings.Queries;
-using GoldenFiberERP.Application.Features.Settings.DTOs;
+using CleanERP.Application.Features.Settings.Commands;
+using CleanERP.Application.Features.Settings.Queries;
+using CleanERP.Application.Features.Settings.DTOs;
 
-namespace GoldenFiberERP.API.Controllers.Settings;
+namespace CleanERP.API.Controllers.Settings;
 
 /// <summary>
 /// Country management endpoints for geographical settings
@@ -557,7 +549,7 @@ public class CountriesController : ControllerBase
 
 #### 4.2 Update Swagger Configuration
 
-**Location:** `src/Presentation/GoldenFiberERP.API/Extensions/SwaggerExtensions.cs`
+**Location:** `src/Presentation/CleanERP.API/Extensions/SwaggerExtensions.cs`
 
 Add your new controller to the appropriate module classification:
 
@@ -633,7 +625,7 @@ When adding a new feature, ensure you create/update these files:
 - [ ] Queries and handlers (`Features/{Module}/Queries/`)
 - [ ] Validators (`Features/{Module}/Validators/`)
 - [ ] Mapping profiles (`Features/{Module}/Mappers/{Entity}MappingProfile.cs`)
-- [ ] Update `IApplicationDbContext` interface
+- [ ] Update `ApplicationDbContext` (Persistence) for new DbSet if needed
 
 ### Infrastructure Layer
 - [ ] Repository implementation (`Persistence/Repositories/{Module}/{Entity}Repository.cs`)
@@ -653,9 +645,9 @@ When adding a new feature, ensure you create/update these files:
 ## Example Implementation Reference
 
 Refer to the Country feature implementation as a complete example:
-- Domain: `src/Core/GoldenFiberERP.Domain/Entities/Settings/Country.cs`
-- Application: `src/Core/GoldenFiberERP.Application/Features/Settings/`
-- Infrastructure: `src/Infrastructure/GoldenFiberERP.Infrastructure/Persistence/Repositories/Settings/CountryRepository.cs`
-- Presentation: `src/Presentation/GoldenFiberERP.API/Controllers/Settings/CountriesController.cs`
+- Domain: `src/Core/CleanERP.Domain/Entities/Settings/Country.cs`
+- Application: `src/Core/CleanERP.Application/Features/Settings/`
+- Persistence: `src/Infrastructure/CleanERP.Persistence/Repositories/Settings/CountryRepository.cs`
+- Presentation: `src/Presentation/CleanERP.API/Controllers/Settings/CountriesController.cs`
 
 Following this pattern ensures consistency across the codebase and maintains the Clean Architecture principles.

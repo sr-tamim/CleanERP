@@ -2,7 +2,7 @@
 
 ## Introduction
 
-GoldenFiberERP is an Enterprise Resource Planning (ERP) system designed to manage and integrate core business processes for manufacturing and distribution companies, with a specific focus on fiber and textile industries.
+CleanERP is an Enterprise Resource Planning (ERP) system designed to manage and integrate core business processes for manufacturing and distribution companies, with a specific focus on fiber and textile industries.
 
 ## System Objectives
 
@@ -68,7 +68,7 @@ The system follows **Clean Architecture** principles with a layered approach:
 
 ## Technology Foundation
 
-- **.NET 8**: Modern, cross-platform framework
+- **.NET**: Modern, cross-platform framework
 - **ASP.NET Core**: Web API development
 - **Entity Framework Core**: Object-relational mapping (planned)
 - **Docker**: Containerization and deployment

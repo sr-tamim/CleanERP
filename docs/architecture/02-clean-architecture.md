@@ -2,12 +2,12 @@
 
 ## Overview
 
-GoldenFiberERP implements Clean Architecture (also known as Onion Architecture) to ensure separation of concerns, testability, and maintainability. This architecture places the business logic at the center and makes the application independent of external frameworks, databases, and UI.
+CleanERP implements Clean Architecture (also known as Onion Architecture) to ensure separation of concerns, testability, and maintainability. This architecture places the business logic at the center and makes the application independent of external frameworks, databases, and UI.
 
 ## Architecture Layers
 
 ### 1. Domain Layer (Core)
-**Location**: `src/Core/GoldenFiberERP.Domain`
+**Location**: `src/Core/CleanERP.Domain`
 
 The innermost layer containing:
 - **Entities**: Business objects with identity
@@ -25,7 +25,7 @@ The innermost layer containing:
 - Defines contracts (interfaces) for external dependencies
 
 ### 2. Application Layer (Core)
-**Location**: `src/Core/GoldenFiberERP.Application`
+**Location**: `src/Core/CleanERP.Application`
 
 Orchestrates domain objects to perform use cases:
 - **Use Cases/Services**: Application-specific business rules
@@ -59,7 +59,7 @@ Implements interfaces defined in inner layers:
 - Can be replaced without affecting business logic
 
 ### 4. Presentation Layer
-**Location**: `src/Presentation/GoldenFiberERP.API`
+**Location**: `src/Presentation/CleanERP.API`
 
 The outermost layer for user interaction:
 - **Controllers**: HTTP endpoints and routing
@@ -111,7 +111,7 @@ Infrastructure Layer
 
 ### Domain Layer Structure
 ```
-GoldenFiberERP.Domain/
+CleanERP.Domain/
 ├── Entities/
 │   ├── Common/
 │   │   ├── BaseEntity.cs
@@ -133,7 +133,7 @@ GoldenFiberERP.Domain/
 
 ### Application Layer Structure
 ```
-GoldenFiberERP.Application/
+CleanERP.Application/
 ├── Common/
 │   ├── Interfaces/
 │   ├── Exceptions/
@@ -149,7 +149,7 @@ GoldenFiberERP.Application/
 
 ### Infrastructure Layer Structure (Planned)
 ```
-GoldenFiberERP.Infrastructure/
+CleanERP.Infrastructure/
 ├── Data/
 │   ├── Contexts/
 │   ├── Configurations/
@@ -165,7 +165,7 @@ GoldenFiberERP.Infrastructure/
 
 ### Presentation Layer Structure
 ```
-GoldenFiberERP.API/
+CleanERP.API/
 ├── Controllers/
 ├── Middleware/
 ├── Filters/

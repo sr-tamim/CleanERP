@@ -1,6 +1,6 @@
-# GoldenFiberERP - Architecture Documentation
+# CleanERP - Architecture Documentation
 
-This folder contains comprehensive architecture documentation for the GoldenFiberERP system.
+This folder contains comprehensive architecture documentation for the CleanERP system.
 
 ## Documentation Overview
 
@@ -14,6 +14,7 @@ This folder contains comprehensive architecture documentation for the GoldenFibe
 - **[Design Patterns](./08-design-patterns.md)** - Implemented design patterns and architectural decisions
 - **[Technology Stack](./09-technology-stack.md)** - Technologies, frameworks, and tools used
 - **[Deployment Architecture](./10-deployment-architecture.md)** - Docker containerization and deployment strategy
+- **[Architecture Flow Guide](./11-architecture-flow.md)** - End-to-end request flow and wiring
 
 ## Development Guidelines
 
@@ -21,7 +22,7 @@ This folder contains comprehensive architecture documentation for the GoldenFibe
 
 ## Architecture Principles
 
-The GoldenFiberERP system follows Clean Architecture principles with clear separation of concerns:
+The CleanERP system follows Clean Architecture principles with clear separation of concerns:
 
 1. **Dependency Inversion** - Dependencies point inward toward the domain
 2. **Single Responsibility** - Each layer has a specific responsibility

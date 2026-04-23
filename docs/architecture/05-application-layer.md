@@ -27,18 +27,18 @@ The Application layer orchestrates the domain objects to perform specific use ca
 ## Current Implementation
 
 ### Project Structure
-**Location**: `src/Core/GoldenFiberERP.Application`
+**Location**: `src/Core/CleanERP.Application`
 
 **Current Status**: Implemented with CQRS pattern and feature-based organization
 **Actual Structure**:
 ```
-GoldenFiberERP.Application/
-├── GoldenFiberERP.Application.csproj
+CleanERP.Application/
+├── CleanERP.Application.csproj
 ├── DependencyInjection.cs     # Service registration
 ├── README.md                  # Application documentation
 ├── Common/                    # Common application concerns
 │   ├── Interfaces/            # Application interfaces
-│   │   └── IApplicationDbContext.cs # Database context interface
+│   │   └── IUnitOfWork.cs           # Transaction and save interface
 │   ├── Models/                # Common models and DTOs
 │   ├── Exceptions/            # Application-specific exceptions
 │   └── Behaviors/             # Cross-cutting behaviors
@@ -236,14 +236,14 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             return Result<int>.Failure(validationResult.Errors.Select(e => e.ErrorMessage));
 
         // Check business rules
-        var existingProduct = await _productRepository.GetByCode(request.Code, cancellationToken);
+        var existingProduct = await _productRepository.GetBySkuAsync(request.SKU, cancellationToken);
         if (existingProduct != null)
-            return Result<int>.Failure($"Product with code '{request.Code}' already exists");
+            return Result<int>.Failure($"Product with SKU '{request.SKU}' already exists");
 
         // Create domain entity
         var product = new Product
         {
-            Code = request.Code,
+            SKU = request.SKU,
             Name = request.Name,
             Description = request.Description,
             Category = request.Category,
@@ -554,18 +554,18 @@ public interface IUnitOfWork
 
 ### Required NuGet Packages
 ```xml
-<PackageReference Include="MediatR" Version="12.1.1" />
-<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
-<PackageReference Include="FluentValidation" Version="11.8.0" />
-<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.0" />
-<PackageReference Include="AutoMapper" Version="12.0.1" />
-<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+<PackageReference Include="MediatR" Version="current-version" />
+<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="current-version" />
+<PackageReference Include="FluentValidation" Version="current-version" />
+<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="current-version" />
+<PackageReference Include="AutoMapper" Version="current-version" />
+<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="current-version" />
+<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="current-version" />
 ```
 
 ### Project References
 ```xml
-<ProjectReference Include="..\GoldenFiberERP.Domain\GoldenFiberERP.Domain.csproj" />
+<ProjectReference Include="..\CleanERP.Domain\CleanERP.Domain.csproj" />
 ```
 
 ## Benefits of This Architecture

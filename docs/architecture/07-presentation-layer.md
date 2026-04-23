@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Presentation layer is the outermost layer of the application that handles user interactions and external communication. In GoldenFiberERP, this is implemented as a Web API that provides RESTful endpoints for client applications to interact with the business logic.
+The Presentation layer is the outermost layer of the application that handles user interactions and external communication. In CleanERP, this is implemented as a Web API that provides RESTful endpoints for client applications to interact with the business logic.
 
 ## Design Principles
 
@@ -29,17 +29,17 @@ The Presentation layer is the outermost layer of the application that handles us
 ## Current Implementation
 
 ### Project Structure
-**Location**: `src/Presentation/GoldenFiberERP.API`
+**Location**: `src/Presentation/CleanERP.API`
 
 **Current Files**:
 ```
-GoldenFiberERP.API/
-├── GoldenFiberERP.API.csproj      # Project configuration
+CleanERP.API/
+├── CleanERP.API.csproj      # Project configuration
 ├── Program.cs                      # Application entry point
 ├── appsettings.json               # Production configuration
 ├── appsettings.Development.json   # Development configuration
 ├── Dockerfile                     # Container definition
-├── GoldenFiberERP.API.http        # HTTP client test file
+├── CleanERP.API.http        # HTTP client test file
 ├── WeatherForecast.cs             # Sample model (to be removed)
 ├── Controllers/                   # API controllers
 │   ├── WeatherForecastController.cs # Sample controller (to be removed)
@@ -162,7 +162,7 @@ Automatically categorizes controllers into logical modules for better API docume
 
 ### Enhanced Project Structure
 ```
-GoldenFiberERP.API/
+CleanERP.API/
 ├── Controllers/                   # API controllers
 │   ├── Common/                    # Base controllers
 │   ├── Inventory/                 # Inventory management
@@ -196,9 +196,9 @@ GoldenFiberERP.API/
 
 ### Enhanced Program.cs
 ```csharp
-using GoldenFiberERP.API.Configuration;
-using GoldenFiberERP.Application;
-using GoldenFiberERP.Infrastructure;
+using CleanERP.API.Configuration;
+using CleanERP.Application;
+using CleanERP.Infrastructure;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -802,12 +802,12 @@ public static class SwaggerConfiguration
             options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Version = "v1",
-                Title = "GoldenFiberERP API",
+                Title = "CleanERP API",
                 Description = "Enterprise Resource Planning System for Fiber and Textile Industries",
                 Contact = new OpenApiContact
                 {
-                    Name = "GoldenFiberERP Support",
-                    Email = "support@goldenfibererp.com"
+                    Name = "CleanERP Support",
+                    Email = "support@cleanerp.com"
                 }
             });
 
@@ -851,21 +851,21 @@ public static class SwaggerConfiguration
 
 ### NuGet Packages
 ```xml
-<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
-<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-<PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
-<PackageReference Include="MediatR" Version="12.1.1" />
-<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-<PackageReference Include="Microsoft.AspNetCore.RateLimiting" Version="8.0.0" />
+<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="current-version" />
+<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="current-version" />
+<PackageReference Include="Swashbuckle.AspNetCore" Version="current-version" />
+<PackageReference Include="FluentValidation.AspNetCore" Version="current-version" />
+<PackageReference Include="Serilog.AspNetCore" Version="current-version" />
+<PackageReference Include="MediatR" Version="current-version" />
+<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="current-version" />
+<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="current-version" />
+<PackageReference Include="Microsoft.AspNetCore.RateLimiting" Version="current-version" />
 ```
 
 ### Project References
 ```xml
-<ProjectReference Include="..\..\Core\GoldenFiberERP.Application\GoldenFiberERP.Application.csproj" />
-<ProjectReference Include="..\..\Infrastructure\GoldenFiberERP.Infrastructure\GoldenFiberERP.Infrastructure.csproj" />
+<ProjectReference Include="..\..\Core\CleanERP.Application\CleanERP.Application.csproj" />
+<ProjectReference Include="..\..\Infrastructure\CleanERP.Infrastructure\CleanERP.Infrastructure.csproj" />
 ```
 
 ## Benefits

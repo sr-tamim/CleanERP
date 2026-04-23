@@ -2,7 +2,7 @@
 
 ## Overview
 
-The GoldenFiberERP system is designed with a containerized, cloud-ready deployment architecture that supports multiple deployment scenarios from development to enterprise production environments. This document outlines the deployment strategies, infrastructure requirements, and operational considerations.
+The CleanERP system is designed with a containerized, cloud-ready deployment architecture that supports multiple deployment scenarios from development to enterprise production environments. This document outlines the deployment strategies, infrastructure requirements, and operational considerations.
 
 ## Deployment Environments
 
@@ -16,16 +16,16 @@ The GoldenFiberERP system is designed with a containerized, cloud-ready deployme
 # docker-compose.yml (Development)
 version: '3.8'
 services:
-  goldenfibererp.api:
+  cleanerp.api:
     build:
-      context: src/Presentation/GoldenFiberERP.API
+      context: src/Presentation/CleanERP.API
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
       - "8081:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=postgresql;Database=GoldenFiberERP_Dev;Username=postgres;Password=YourPassword123;
+      - ConnectionStrings__DefaultConnection=Host=postgresql;Database=CleanERP_Dev;Username=postgres;Password=YourPassword123;
     depends_on:
       - postgresql
       - redis
@@ -33,7 +33,7 @@ services:
   postgresql:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_DB=GoldenFiberERP_Dev
+      - POSTGRES_DB=CleanERP_Dev
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=YourPassword123
     ports:
@@ -122,28 +122,28 @@ volumes:
 #### Multi-Stage Dockerfile
 ```dockerfile
 # Build stage
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:current-sdk AS build
 WORKDIR /src
 
 # Copy and restore projects
-COPY ["src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj", "src/Presentation/GoldenFiberERP.API/"]
-COPY ["src/Core/GoldenFiberERP.Application/GoldenFiberERP.Application.csproj", "src/Core/GoldenFiberERP.Application/"]
-COPY ["src/Core/GoldenFiberERP.Domain/GoldenFiberERP.Domain.csproj", "src/Core/GoldenFiberERP.Domain/"]
-COPY ["src/Infrastructure/GoldenFiberERP.Infrastructure/GoldenFiberERP.Infrastructure.csproj", "src/Infrastructure/GoldenFiberERP.Infrastructure/"]
+COPY ["src/Presentation/CleanERP.API/CleanERP.API.csproj", "src/Presentation/CleanERP.API/"]
+COPY ["src/Core/CleanERP.Application/CleanERP.Application.csproj", "src/Core/CleanERP.Application/"]
+COPY ["src/Core/CleanERP.Domain/CleanERP.Domain.csproj", "src/Core/CleanERP.Domain/"]
+COPY ["src/Infrastructure/CleanERP.Infrastructure/CleanERP.Infrastructure.csproj", "src/Infrastructure/CleanERP.Infrastructure/"]
 
-RUN dotnet restore "src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj"
+RUN dotnet restore "src/Presentation/CleanERP.API/CleanERP.API.csproj"
 
 # Copy source code and build
 COPY . .
-WORKDIR "/src/src/Presentation/GoldenFiberERP.API"
-RUN dotnet build "GoldenFiberERP.API.csproj" -c Release -o /app/build
+WORKDIR "/src/src/Presentation/CleanERP.API"
+RUN dotnet build "CleanERP.API.csproj" -c Release -o /app/build
 
 # Publish stage
 FROM build AS publish
-RUN dotnet publish "GoldenFiberERP.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "CleanERP.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:current-runtime AS runtime
 WORKDIR /app
 
 # Create non-root user
@@ -158,7 +158,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8080/health || exit 1
 
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "GoldenFiberERP.API.dll"]
+ENTRYPOINT ["dotnet", "CleanERP.API.dll"]
 ```
 
 #### Image Optimization Features
@@ -173,7 +173,7 @@ ENTRYPOINT ["dotnet", "GoldenFiberERP.API.dll"]
 #### Private Registry Structure
 ```
 registry.company.com/
-├── goldenfibererp/
+├── cleanerp/
 │   ├── api:latest
 │   ├── api:v1.0.0
 │   ├── api:develop
@@ -201,17 +201,17 @@ registry.company.com/
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: goldenfibererp-prod
+  name: cleanerp-prod
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: goldenfibererp-staging
+  name: cleanerp-staging
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: goldenfibererp-dev
+  name: cleanerp-dev
 ```
 
 ### Application Deployment
@@ -220,21 +220,21 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: goldenfibererp-api
-  namespace: goldenfibererp-prod
+  name: cleanerp-api
+  namespace: cleanerp-prod
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: goldenfibererp-api
+      app: cleanerp-api
   template:
     metadata:
       labels:
-        app: goldenfibererp-api
+        app: cleanerp-api
     spec:
       containers:
       - name: api
-        image: registry.company.com/goldenfibererp/api:v1.0.0
+        image: registry.company.com/cleanerp/api:v1.0.0
         ports:
         - containerPort: 8080
         env:
@@ -268,11 +268,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: goldenfibererp-api-service
-  namespace: goldenfibererp-prod
+  name: cleanerp-api-service
+  namespace: cleanerp-prod
 spec:
   selector:
-    app: goldenfibererp-api
+    app: cleanerp-api
   ports:
   - protocol: TCP
     port: 80
@@ -287,7 +287,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgresql
-  namespace: goldenfibererp-prod
+  namespace: cleanerp-prod
 spec:
   serviceName: postgresql-service
   replicas: 1
@@ -304,7 +304,7 @@ spec:
         image: postgres:16-alpine
         env:
         - name: POSTGRES_DB
-          value: "GoldenFiberERP"
+          value: "CleanERP"
         - name: POSTGRES_USER
           value: "postgres"
         - name: POSTGRES_PASSWORD
@@ -340,8 +340,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: goldenfibererp-ingress
-  namespace: goldenfibererp-prod
+  name: cleanerp-ingress
+  namespace: cleanerp-prod
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -349,17 +349,17 @@ metadata:
 spec:
   tls:
   - hosts:
-    - api.goldenfibererp.com
-    secretName: goldenfibererp-tls
+    - api.cleanerp.com
+    secretName: cleanerp-tls
   rules:
-  - host: api.goldenfibererp.com
+  - host: api.cleanerp.com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: goldenfibererp-api-service
+            name: cleanerp-api-service
             port:
               number: 80
 ```
@@ -378,11 +378,11 @@ metadata:
 data:
   container-app.yaml: |
     location: East US
-    resourceGroup: goldenfibererp-prod
-    containerAppEnvironment: goldenfibererp-env
+    resourceGroup: cleanerp-prod
+    containerAppEnvironment: cleanerp-env
     app:
-      name: goldenfibererp-api
-      image: registry.company.com/goldenfibererp/api:latest
+      name: cleanerp-api
+      image: registry.company.com/cleanerp/api:latest
       replicas:
         min: 2
         max: 10
@@ -393,7 +393,7 @@ data:
         external: true
         targetPort: 8080
         customDomains:
-          - name: api.goldenfibererp.com
+          - name: api.cleanerp.com
             certificateId: /subscriptions/.../certificates/ssl-cert
 ```
 
@@ -403,14 +403,14 @@ data:
 apiVersion: web.azure.com/v1
 kind: AppService
 metadata:
-  name: goldenfibererp-api
+  name: cleanerp-api
 spec:
   location: East US
-  resourceGroup: goldenfibererp-prod
-  appServicePlan: goldenfibererp-plan
+  resourceGroup: cleanerp-prod
+  appServicePlan: cleanerp-plan
   containerSettings:
     registry: registry.company.com
-    image: goldenfibererp/api
+    image: cleanerp/api
     tag: latest
   appSettings:
     - name: ASPNETCORE_ENVIRONMENT
@@ -423,7 +423,7 @@ spec:
 #### ECS Fargate
 ```json
 {
-  "family": "goldenfibererp-api",
+  "family": "cleanerp-api",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "512",
@@ -432,8 +432,8 @@ spec:
   "taskRoleArn": "arn:aws:iam::account:role/ecsTaskRole",
   "containerDefinitions": [
     {
-      "name": "goldenfibererp-api",
-      "image": "registry.company.com/goldenfibererp/api:latest",
+      "name": "cleanerp-api",
+      "image": "registry.company.com/cleanerp/api:latest",
       "portMappings": [
         {
           "containerPort": 8080,
@@ -455,7 +455,7 @@ spec:
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/goldenfibererp-api",
+          "awslogs-group": "/ecs/cleanerp-api",
           "awslogs-region": "us-east-1",
           "awslogs-stream-prefix": "ecs"
         }
@@ -470,7 +470,7 @@ spec:
 ### GitHub Actions Workflow
 ```yaml
 # .github/workflows/deploy.yml
-name: Deploy GoldenFiberERP
+name: Deploy CleanERP
 
 on:
   push:
@@ -480,7 +480,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: goldenfibererp/api
+  IMAGE_NAME: cleanerp/api
 
 jobs:
   test:
@@ -491,7 +491,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '<current-sdk-version>'
     
     - name: Restore dependencies
       run: dotnet restore
@@ -535,7 +535,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: src/Presentation/GoldenFiberERP.API/Dockerfile
+        file: src/Presentation/CleanERP.API/Dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
@@ -550,9 +550,9 @@ jobs:
     - name: Deploy to Staging
       run: |
         # Deploy to staging environment
-        kubectl set image deployment/goldenfibererp-api \
+        kubectl set image deployment/cleanerp-api \
           api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-          -n goldenfibererp-staging
+          -n cleanerp-staging
 
   deploy-production:
     needs: build-and-push
@@ -564,9 +564,9 @@ jobs:
     - name: Deploy to Production
       run: |
         # Deploy to production environment
-        kubectl set image deployment/goldenfibererp-api \
+        kubectl set image deployment/cleanerp-api \
           api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-          -n goldenfibererp-prod
+          -n cleanerp-prod
 ```
 
 ## PostgreSQL Production Configuration
@@ -578,7 +578,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: postgresql-cluster
-  namespace: goldenfibererp-prod
+  namespace: cleanerp-prod
 spec:
   instances: 3
   
@@ -599,8 +599,8 @@ spec:
       
   bootstrap:
     initdb:
-      database: GoldenFiberERP
-      owner: goldenfibererp_user
+      database: CleanERP
+      owner: cleanerp_user
       secret:
         name: postgresql-credentials
         
@@ -631,10 +631,10 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: postgresql-credentials
-  namespace: goldenfibererp-prod
+  namespace: cleanerp-prod
 type: Opaque
 stringData:
-  username: goldenfibererp_user
+  username: cleanerp_user
   password: "your-secure-password"
   postgres-password: "postgres-admin-password"
 ```
@@ -646,7 +646,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pgbouncer
-  namespace: goldenfibererp-prod
+  namespace: cleanerp-prod
 spec:
   replicas: 2
   selector:
@@ -676,7 +676,7 @@ spec:
               name: postgresql-credentials
               key: password
         - name: DATABASES_DBNAME
-          value: GoldenFiberERP
+          value: CleanERP
         - name: POOL_MODE
           value: transaction
         - name: SERVER_RESET_QUERY
@@ -707,7 +707,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: pgbouncer-service
-  namespace: goldenfibererp-prod
+  namespace: cleanerp-prod
 spec:
   selector:
     app: pgbouncer
@@ -725,7 +725,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-exporter-config
-  namespace: goldenfibererp-prod
+  namespace: cleanerp-prod
 data:
   queries.yaml: |
     pg_database:
@@ -769,7 +769,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-exporter
-  namespace: goldenfibererp-prod
+  namespace: cleanerp-prod
 spec:
   replicas: 1
   selector:
@@ -785,7 +785,7 @@ spec:
         image: prometheuscommunity/postgres-exporter:latest
         env:
         - name: DATA_SOURCE_NAME
-          value: "postgresql://goldenfibererp_user:$(POSTGRES_PASSWORD)@postgresql-cluster-rw:5432/GoldenFiberERP?sslmode=require"
+          value: "postgresql://cleanerp_user:$(POSTGRES_PASSWORD)@postgresql-cluster-rw:5432/CleanERP?sslmode=require"
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -926,13 +926,13 @@ public static class PostgreSqlMigrationExtensions
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: goldenfibererp-api
+  name: cleanerp-api
 spec:
   replicas: 3
   strategy:
     blueGreen:
-      activeService: goldenfibererp-api-active
-      previewService: goldenfibererp-api-preview
+      activeService: cleanerp-api-active
+      previewService: cleanerp-api-preview
       autoPromotionEnabled: false
       scaleDownDelaySeconds: 30
       prePromotionAnalysis:
@@ -940,18 +940,18 @@ spec:
         - templateName: success-rate
         args:
         - name: service-name
-          value: goldenfibererp-api-preview
+          value: cleanerp-api-preview
   selector:
     matchLabels:
-      app: goldenfibererp-api
+      app: cleanerp-api
   template:
     metadata:
       labels:
-        app: goldenfibererp-api
+        app: cleanerp-api
     spec:
       containers:
       - name: api
-        image: registry.company.com/goldenfibererp/api:latest
+        image: registry.company.com/cleanerp/api:latest
 ```
 
 ## Monitoring and Observability
@@ -968,9 +968,9 @@ data:
     global:
       scrape_interval: 15s
     scrape_configs:
-    - job_name: 'goldenfibererp-api'
+    - job_name: 'cleanerp-api'
       static_configs:
-      - targets: ['goldenfibererp-api-service:80']
+      - targets: ['cleanerp-api-service:80']
       metrics_path: /metrics
       scrape_interval: 5s
 ```
@@ -979,7 +979,7 @@ data:
 ```json
 {
   "dashboard": {
-    "title": "GoldenFiberERP Metrics",
+    "title": "CleanERP Metrics",
     "panels": [
       {
         "title": "Request Rate",
@@ -1033,16 +1033,16 @@ data:
 #!/bin/bash
 # Automated backup script
 BACKUP_PATH="/backups/$(date +%Y%m%d_%H%M%S)"
-DB_NAME="GoldenFiberERP"
+DB_NAME="CleanERP"
 DB_USER="postgres"
 
 # Create backup
-kubectl exec -n goldenfibererp-prod postgresql-0 -- \
+kubectl exec -n cleanerp-prod postgresql-0 -- \
   pg_dump -h localhost -U $DB_USER -d $DB_NAME -f /var/lib/postgresql/backup/${DB_NAME}_$(date +%Y%m%d_%H%M%S).sql
 
 # Upload to cloud storage
-kubectl cp goldenfibererp-prod/postgresql-0:/var/lib/postgresql/backup/ $BACKUP_PATH
-aws s3 sync $BACKUP_PATH s3://goldenfibererp-backups/database/
+kubectl cp cleanerp-prod/postgresql-0:/var/lib/postgresql/backup/ $BACKUP_PATH
+aws s3 sync $BACKUP_PATH s3://cleanerp-backups/database/
 ```
 
 ### Application State Backup
@@ -1058,12 +1058,12 @@ aws s3 sync $BACKUP_PATH s3://goldenfibererp-backups/database/
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: goldenfibererp-api-hpa
+  name: cleanerp-api-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: goldenfibererp-api
+    name: cleanerp-api
   minReplicas: 2
   maxReplicas: 10
   metrics:

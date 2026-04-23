@@ -2,7 +2,7 @@
 
 ## Overview
 
-The GoldenFiberERP system implements several well-established design patterns to ensure maintainability, testability, and scalability. This document outlines the key patterns used throughout the application and their implementation details.
+The CleanERP system implements several well-established design patterns to ensure maintainability, testability, and scalability. This document outlines the key patterns used throughout the application and their implementation details.
 
 ## Architectural Patterns
 
@@ -29,8 +29,7 @@ The GoldenFiberERP system implements several well-established design patterns to
 // Domain layer interface
 public interface IProductRepository : IBaseRepository<Product>
 {
-    Task<Product?> GetByCode(string productCode, CancellationToken cancellationToken = default);
-    Task<IEnumerable<Product>> GetByCategory(string category, CancellationToken cancellationToken = default);
+    Task<Product?> GetBySkuAsync(string sku, CancellationToken cancellationToken = default);
 }
 
 // Infrastructure layer implementation
@@ -38,9 +37,9 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
 {
     public ProductRepository(ApplicationDbContext context) : base(context) { }
     
-    public async Task<Product?> GetByCode(string productCode, CancellationToken cancellationToken = default)
+    public async Task<Product?> GetBySkuAsync(string sku, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FirstOrDefaultAsync(p => p.Code == productCode, cancellationToken);
+        return await _dbSet.FirstOrDefaultAsync(p => p.SKU == sku, cancellationToken);
     }
 }
 ```

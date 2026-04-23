@@ -27,8 +27,8 @@
 
 ### 1. Start the Application
 ```bash
-cd "x:\web-dev\GoldenFiberERP\erp_solution"
-dotnet run --project src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj
+cd "x:\web-dev\CleanERP\erp_solution"
+dotnet run --project src/Presentation/CleanERP.API/CleanERP.API.csproj
 ```
 
 ### 2. Access Swagger UI

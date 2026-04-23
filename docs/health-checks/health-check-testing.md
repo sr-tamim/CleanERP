@@ -1,6 +1,6 @@
 # Health Check Testing Script
 
-This script provides examples for testing all health check endpoints in the GoldenFiberERP API.
+This script provides examples for testing all health check endpoints in the CleanERP API.
 
 ## Prerequisites
 
@@ -99,7 +99,7 @@ curl -X GET "http://localhost:8080/api/health" \
 
 BASE_URL="http://localhost:5000"
 
-echo "=== GoldenFiberERP Health Check Report ==="
+echo "=== CleanERP Health Check Report ==="
 echo "Timestamp: $(date)"
 echo
 

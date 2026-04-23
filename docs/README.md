@@ -1,4 +1,4 @@
-# GoldenFiberERP Documentation
+# CleanERP Documentation
 
 This folder contains all project documentation organized by topic and purpose.
 
@@ -30,6 +30,7 @@ Health monitoring and diagnostic system documentation:
 1. **Architecture Overview**: Start with [`architecture/02-clean-architecture.md`](architecture/02-clean-architecture.md)
 2. **Project Structure**: Review [`architecture/03-project-structure.md`](architecture/03-project-structure.md)
 3. **Swagger Usage**: See [`swagger/swagger-modules-user-guide.md`](swagger/swagger-modules-user-guide.md)
+4. **.NET Upgrade Guide**: See [`development/dotnet-10-upgrade-guide.md`](development/dotnet-10-upgrade-guide.md)
 
 ### For System Administrators
 1. **Health Monitoring**: Review [`health-checks/`](health-checks/) folder
@@ -54,6 +55,12 @@ Health monitoring and diagnostic system documentation:
 | [Design Patterns](architecture/08-design-patterns.md) | Patterns used throughout the system |
 | [Technology Stack](architecture/09-technology-stack.md) | Technologies, frameworks, and tools |
 | [Deployment Architecture](architecture/10-deployment-architecture.md) | Deployment and infrastructure setup |
+| [Architecture Flow Guide](architecture/11-architecture-flow.md) | How requests flow through the system |
+
+### Development Documentation
+| Document | Description |
+|----------|-------------|
+| [.NET 10 Upgrade Guide](development/dotnet-10-upgrade-guide.md) | CLI-first guide for upgrading the full solution from .NET 8 to .NET 10 |
 
 ### Swagger Documentation
 | Document | Description |

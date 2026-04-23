@@ -1,6 +1,6 @@
 # Health Check Endpoints
 
-This document describes the comprehensive health check endpoints available in the GoldenFiberERP API, specifically designed for manual database schema management (no Entity Framework migrations). All health-related functionality is consolidated into a single `HealthController`.
+This document describes the comprehensive health check endpoints available in the CleanERP API, specifically designed for manual database schema management (no Entity Framework migrations). All health-related functionality is consolidated into a single `HealthController`.
 
 ## Overview
 
@@ -17,7 +17,7 @@ Returns basic API status without database connectivity.
 {
   "Status": "Healthy",
   "Timestamp": "2024-01-15T10:30:00Z",
-  "Application": "GoldenFiberERP API",
+  "Application": "CleanERP API",
   "Version": "1.0.0",
   "Environment": "Development"
 }
@@ -33,7 +33,7 @@ Tests basic database connectivity and provides PostgreSQL-specific information.
   "Status": "Healthy",
   "Timestamp": "2024-01-15T10:30:00Z",
   "Component": "Database",
-  "DatabaseName": "goldenfibererp",
+  "DatabaseName": "cleanerp",
   "Provider": "PostgreSQL",
   "ServerVersion": "16.1",
   "ConnectionStatus": "Connected",
@@ -52,7 +52,7 @@ Comprehensive health check including API and database components.
 {
   "OverallStatus": "Healthy",
   "Timestamp": "2024-01-15T10:30:00Z",
-  "Application": "GoldenFiberERP API",
+  "Application": "CleanERP API",
   "Version": "1.0.0",
   "Environment": "Development",
   "HealthChecks": [
@@ -85,7 +85,7 @@ Comprehensive database connection test with performance metrics.
   "Success": true,
   "Message": "Database connection successful",
   "ConnectionDetails": {
-    "DatabaseName": "goldenfibererp",
+    "DatabaseName": "cleanerp",
     "Provider": "PostgreSQL",
     "ProductCount": 0,
     "ConnectionTime": "45ms"
@@ -101,9 +101,9 @@ Detailed database information with masked connection string.
 
 ```json
 {
-  "DatabaseName": "goldenfibererp",
+  "DatabaseName": "cleanerp",
   "Provider": "PostgreSQL",
-  "ConnectionString": "Host=localhost;Database=goldenfibererp;Username=***;Password=***",
+  "ConnectionString": "Host=localhost;Database=cleanerp;Username=***;Password=***",
   "Tables": {
     "Products": {
       "Count": 0
@@ -126,7 +126,7 @@ Advanced PostgreSQL-specific health check using direct Npgsql connections.
   "Status": "Healthy",
   "Message": "PostgreSQL database is healthy and accessible",
   "Database": {
-    "Name": "goldenfibererp",
+    "Name": "cleanerp",
     "Server": "localhost:5432",
     "Version": "16.1.0",
     "Size": "8.5 MB",
@@ -225,7 +225,7 @@ The database connection is configured in `appsettings.json`:
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=goldenfibererp;Username=admin;Password=your_password"
+    "DefaultConnection": "Host=localhost;Database=cleanerp;Username=admin;Password=your_password"
   }
 }
 ```

@@ -30,36 +30,30 @@ The Infrastructure layer implements the interfaces defined in the Application an
 The Infrastructure layer is currently implemented and includes:
 
 **Projects**:
-- `GoldenFiberERP.Infrastructure` - External services and repository implementations
-- `GoldenFiberERP.Persistence` - Database-specific implementations
+- `CleanERP.Infrastructure` - External services and infrastructure concerns
+- `CleanERP.Persistence` - Database-specific implementations and repositories
 
 ### Current Project Structure
 
-#### GoldenFiberERP.Infrastructure
-**Location**: `src/Infrastructure/GoldenFiberERP.Infrastructure`
+#### CleanERP.Infrastructure
+**Location**: `src/Infrastructure/CleanERP.Infrastructure`
 
 ```
-GoldenFiberERP.Infrastructure/
-├── GoldenFiberERP.Infrastructure.csproj
+CleanERP.Infrastructure/
+├── CleanERP.Infrastructure.csproj
 ├── DependencyInjection.cs     # Service registration
 ├── README.md                  # Infrastructure documentation
 ├── Extensions/                # Extension methods and utilities
-├── Persistence/               # Repository implementations
-│   └── Repositories/          # Repository implementations
-│       ├── Common/            # Base repository patterns
-│       ├── Inventory/         # Inventory repositories
-│       └── Settings/          # Settings repositories
-│           └── CountryRepository.cs # Country repository implementation
 └── Services/                  # External service implementations
     └── (planned implementations)
 ```
 
-#### GoldenFiberERP.Persistence
-**Location**: `src/Infrastructure/GoldenFiberERP.Persistence`
+#### CleanERP.Persistence
+**Location**: `src/Infrastructure/CleanERP.Persistence`
 
 ```
-GoldenFiberERP.Persistence/
-├── GoldenFiberERP.Persistence.csproj
+CleanERP.Persistence/
+├── CleanERP.Persistence.csproj
 ├── DependencyInjection.cs     # Persistence service registration
 ├── README.md                  # Persistence layer documentation
 ├── Configurations/            # Entity configurations for EF Core
@@ -67,8 +61,12 @@ GoldenFiberERP.Persistence/
 │       └── CountryConfiguration.cs # Country EF configuration
 ├── Contexts/                  # Database contexts
 │   └── ApplicationDbContext.cs # Main EF DbContext
-├── Repositories/              # Additional repository implementations
-│   └── (if needed)
+├── Repositories/              # Repository implementations
+│   ├── Common/                # Base repository patterns
+│   └── Settings/              # Settings repositories
+│       └── CountryRepository.cs # Country repository implementation
+├── Services/                  # Database-related services
+│   └── HealthCheckService.cs  # Database health checks
 └── Seeders/                   # Database seeders and initial data
     └── (seeding implementations)
 ```
@@ -80,7 +78,7 @@ GoldenFiberERP.Persistence/
 #### ApplicationDbContext
 ```csharp
 // Contexts/ApplicationDbContext.cs
-public class ApplicationDbContext : DbContext, IApplicationDbContext, IUnitOfWork
+public class ApplicationDbContext : DbContext, IUnitOfWork
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime _dateTime;
@@ -415,32 +413,16 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
     {
     }
 
-    public async Task<Product?> GetByCode(string productCode, CancellationToken cancellationToken = default)
+    public async Task<Product?> GetBySkuAsync(string sku, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .FirstOrDefaultAsync(p => p.Code == productCode, cancellationToken);
+            .FirstOrDefaultAsync(p => p.SKU == sku, cancellationToken);
     }
 
-    public async Task<IEnumerable<Product>> GetByCategory(string category, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Product>> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Where(p => p.Category == category && p.IsActive)
-            .OrderBy(p => p.Name)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<Product>> GetLowStockProducts(CancellationToken cancellationToken = default)
-    {
-        return await _dbSet
-            .Where(p => p.StockQuantity <= p.MinimumStockLevel && p.IsActive)
-            .OrderBy(p => p.Name)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<Product>> SearchByName(string searchTerm, CancellationToken cancellationToken = default)
-    {
-        return await _dbSet
-            .Where(p => p.Name.Contains(searchTerm) && p.IsActive)
+            .Where(p => p.Name.Contains(name))
             .OrderBy(p => p.Name)
             .ToListAsync(cancellationToken);
     }
@@ -915,22 +897,22 @@ public class StripePaymentService : IPaymentService
 
 ### NuGet Packages
 ```xml
-<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
-<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
-<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.0" />
-<PackageReference Include="MailKit" Version="4.3.0" />
-<PackageReference Include="AutoMapper" Version="12.0.1" />
-<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-<PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="current-version" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="current-version" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="current-version" />
+<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="current-version" />
+<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="current-version" />
+<PackageReference Include="MailKit" Version="current-version" />
+<PackageReference Include="AutoMapper" Version="current-version" />
+<PackageReference Include="Serilog.Extensions.Hosting" Version="current-version" />
+<PackageReference Include="Serilog.Sinks.File" Version="current-version" />
+<PackageReference Include="Serilog.Sinks.Console" Version="current-version" />
 ```
 
 ### Project References
 ```xml
-<ProjectReference Include="..\Core\GoldenFiberERP.Application\GoldenFiberERP.Application.csproj" />
-<ProjectReference Include="..\Core\GoldenFiberERP.Domain\GoldenFiberERP.Domain.csproj" />
+<ProjectReference Include="..\Core\CleanERP.Application\CleanERP.Application.csproj" />
+<ProjectReference Include="..\Core\CleanERP.Domain\CleanERP.Domain.csproj" />
 ```
 
 The Infrastructure layer provides all the technical implementations needed to support the business logic defined in the Application and Domain layers, while maintaining proper separation of concerns and dependency inversion principles.
@@ -979,7 +961,7 @@ public static IServiceCollection AddPostgreSqlDatabase(this IServiceCollection s
 // appsettings.json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=GoldenFiberERP;Username=postgres;Password=your_password;Include Error Detail=true;",
+    "DefaultConnection": "Host=localhost;Database=CleanERP;Username=postgres;Password=your_password;Include Error Detail=true;",
     "Redis": "localhost:6379"
   },
   "Database": {

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The GoldenFiberERP API is now configured to launch directly to the **System Health module** in Swagger UI, providing immediate access to health monitoring and diagnostic endpoints.
+The CleanERP API is now configured to launch directly to the **System Health module** in Swagger UI, providing immediate access to health monitoring and diagnostic endpoints.
 
 ## Configuration Details
 
@@ -72,7 +72,7 @@ When the System Health module loads by default, users will see:
 ### Starting the Application
 ```bash
 # Any of these commands will launch with System Health module selected
-dotnet run --project src/Presentation/GoldenFiberERP.API/GoldenFiberERP.API.csproj
+dotnet run --project src/Presentation/CleanERP.API/CleanERP.API.csproj
 
 # Or using launch profiles
 dotnet run --launch-profile https

@@ -6,6 +6,7 @@
 appsettings*.json
 !appsettings.example.json
 .codex
+*.sql
 
 # User-specific files
 *.rsuser

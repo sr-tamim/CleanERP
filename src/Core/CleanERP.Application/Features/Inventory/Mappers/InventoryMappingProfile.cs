@@ -9,8 +9,5 @@ public class InventoryMappingProfile : Profile
     public InventoryMappingProfile()
     {
         CreateMap<Product, ProductDto>();
-        CreateMap<CreateProductDto, Product>();
-        CreateMap<UpdateProductDto, Product>();
-        // Add more mappings as needed
     }
 }

@@ -14,7 +14,17 @@ public static class SwaggerExtensions
             {
                 Version = "v1",
                 Title = "CleanERP API - Overview",
-                Description = "Complete API documentation for CleanERP system"
+                Description = """
+                    <p>A <strong>Clean Architecture</strong> practice project built with <strong>ASP.NET Core 10</strong>, EF Core, and PostgreSQL.</p>
+                    <p>Demonstrates Domain-Driven Design, CQRS, repository pattern, JWT authentication, and modular Swagger documentation.</p>
+                    <h3>Demo credentials</h3>
+                    <table>
+                      <tr><th>Role</th><th>Username</th><th>Password</th><th>Access</th></tr>
+                      <tr><td>SuperAdmin</td><td><code>superadmin</code></td><td><code>Admin@1234</code></td><td>Full access</td></tr>
+                      <tr><td>ReadOnly</td><td><code>demo</code></td><td><code>Demo@1234</code></td><td>Read-only</td></tr>
+                    </table>
+                    <p><em>Use the <strong>POST /api/auth/login</strong> endpoint to obtain a Bearer token, then click <strong>Authorize</strong>.</em></p>
+                    """
             });
 
             options.SwaggerDoc("inventory", new OpenApiInfo
@@ -97,7 +107,7 @@ public static class SwaggerExtensions
             // Add JWT Bearer authentication for Swagger
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
+                Description = "Enter: **Bearer <token>**\n\nDemo logins — POST /api/auth/login:\n- `superadmin` / `Admin@1234` (full access)\n- `demo` / `Demo@1234` (read-only)",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,

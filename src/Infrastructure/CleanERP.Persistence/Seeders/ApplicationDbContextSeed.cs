@@ -8,8 +8,8 @@ public static class ApplicationDbContextSeed
 {
     public static async Task SeedAsync(ApplicationDbContext context)
     {
-        // Ensure database is created
-        await context.Database.EnsureCreatedAsync();
+        // Apply any pending migrations (creates DB if it doesn't exist)
+        await context.Database.MigrateAsync();
 
         // Seed Products if none exist
         if (!await context.Products.AnyAsync())

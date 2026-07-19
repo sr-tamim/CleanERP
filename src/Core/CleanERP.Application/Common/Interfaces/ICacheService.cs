@@ -2,8 +2,8 @@ namespace CleanERP.Application.Common.Interfaces;
 
 public interface ICacheService
 {
-    Task<T?> GetAsync<T>(string key) where T : class;
-    Task SetAsync<T>(string key, T value, TimeSpan? expiration = null) where T : class;
+    Task<T?> GetAsync<T>(string key);
+    Task SetAsync<T>(string key, T value, TimeSpan? expiration = null);
     Task RemoveAsync(string key);
     Task<bool> ExistsAsync(string key);
 }

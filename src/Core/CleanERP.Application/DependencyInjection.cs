@@ -11,17 +11,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        // Register AutoMapper with enhanced configuration for enterprise ERP
+        // Register AutoMapper — scan all profiles in this assembly
         services.AddAutoMapper(cfg =>
         {
-            // Add all profiles from the current assembly
             cfg.AddMaps(Assembly.GetExecutingAssembly());
-            
-            // Configure for enterprise scenarios
-            cfg.AllowNullDestinationValues = false; // Prevent null assignments in enterprise data
-            cfg.AllowNullCollections = false; // Ensure collections are always initialized
-            
-        }, Assembly.GetExecutingAssembly());
+        });
         
         // Register FluentValidation
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

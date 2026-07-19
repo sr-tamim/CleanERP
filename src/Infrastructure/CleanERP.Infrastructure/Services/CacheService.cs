@@ -8,7 +8,7 @@ public class InMemoryCacheService : ICacheService
     private static readonly Dictionary<string, CacheItem> _cache = new();
     private static readonly object _lock = new();
 
-    public async Task<T?> GetAsync<T>(string key) where T : class
+    public async Task<T?> GetAsync<T>(string key)
     {
         await Task.CompletedTask;
 
@@ -27,10 +27,10 @@ public class InMemoryCacheService : ICacheService
             }
         }
 
-        return null;
+        return default;
     }
 
-    public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null) where T : class
+    public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null)
     {
         await Task.CompletedTask;
 
